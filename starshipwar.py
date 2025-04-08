@@ -15,22 +15,22 @@ GAME_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # Ukuran l
 pygame.mouse.set_visible(False)  # Sembunyikan kursor saat game berlangsung
 
 # === KONSTANTA PATH GAMBAR (Image Resources) ===
-PLAYER_IMAGE_PATH = 'Tubes/img/playership2.png'
-ENEMY1_IMAGE_PATH = 'Tubes/img/enemy_1.png'
-ENEMY2_IMAGE_PATH = 'Tubes/img/enemy_2.png'
-SIDE_ENEMY_IMAGE_PATH = 'Tubes/img/enemy_3.png'
+PLAYER_IMAGE_PATH = 'img/playership2.png'
+ENEMY1_IMAGE_PATH = 'img/enemy_1.png'
+ENEMY2_IMAGE_PATH = 'img/enemy_2.png'
+SIDE_ENEMY_IMAGE_PATH = 'img/enemy_3.png'
 
-PLAYER_BULLET_IMAGE = 'Tubes/img/pbullet.png'
-ENEMY_BULLET_IMAGE = 'Tubes/img/enemy_bullet.png'
-SIDE_ENEMY_BULLET_IMAGE = 'Tubes/img/enemy_side_bullet.png'
+PLAYER_BULLET_IMAGE = 'img/pbullet.png'
+ENEMY_BULLET_IMAGE = 'img/enemy_bullet.png'
+SIDE_ENEMY_BULLET_IMAGE = 'img/enemy_side_bullet.png'
 
 # === SUARA / AUDIO (Sound Resources & Playback) ===
-pygame.mixer.music.load('Tubes/sound/music.wav')
+pygame.mixer.music.load('sound/music.wav')
 pygame.mixer.music.play(-1)  # Loop background music terus menerus
 
-EXPLOSION_SOUND = pygame.mixer.Sound('Tubes/sound/audio_explosion.wav')
-LASER_SOUND = pygame.mixer.Sound('Tubes/sound/audio_laser.wav')
-GAME_OVER_SOUND = pygame.mixer.Sound('Tubes/sound/Game Over Theme.mp3')
+EXPLOSION_SOUND = pygame.mixer.Sound('sound/audio_explosion.wav')
+LASER_SOUND = pygame.mixer.Sound('sound/audio_laser.wav')
+GAME_OVER_SOUND = pygame.mixer.Sound('sound/Game Over Theme.mp3')
 
 # === FRAME CONTROL (Waktu & Kecepatan Game) ===
 GAME_CLOCK = pygame.time.Clock()
@@ -135,7 +135,7 @@ class Player(pygame.sprite.Sprite):
         if self.activate_bullet:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             Bullet(
-                img='Tubes/img/pbullet.png',
+                img='img/pbullet.png',
                 x=mouse_x + 10,
                 y=mouse_y,
                 speed=-10,
@@ -262,7 +262,7 @@ class Explosion(pygame.sprite.Sprite):
         super().__init__()
         self.img_list = [
             pygame.transform.scale(
-                self._load_image(f'Tubes/img/exp{i}.png'), size
+                self._load_image(f'img/exp{i}.png'), size
             )
             for i in range(1, 6)
         ]
@@ -318,17 +318,17 @@ class Game:
         self.count_hit_enemy1 = 0
         self.count_hit_enemy2 = 0
         self.count_hit_sideenemy = 0
-        self.font = pygame.font.Font("Tubes/font/Pixeled.ttf", 50)
+        self.font = pygame.font.Font("font/Pixeled.ttf", 50)
         self.star_group = pygame.sprite.Group()
 
     # === MENAMPILKAN TULISAN DI LAYAR AWAL ===
     def start_text(self):
-        font = pygame.font.Font("Tubes/font/ModernAesthetic-Personal.otf", 90)
+        font = pygame.font.Font("font/ModernAesthetic-Personal.otf", 90)
         title_surface = font.render('Starship War', True, pygame.Color('white'))
         title_rect = title_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4))
         GAME_SCREEN.blit(title_surface, title_rect)
-        font1 = pygame.font.Font("Tubes/font/ModernAesthetic-Personal.otf", 50)
-        font2 = pygame.font.Font("Tubes/font/HUTheGame.ttf", 30)
+        font1 = pygame.font.Font("font/ModernAesthetic-Personal.otf", 50)
+        font2 = pygame.font.Font("font/HUTheGame.ttf", 30)
         text1_surface = font1.render('Press Enter to Start', True, pygame.Color('white'))
         text2_surface = font2.render('KELOMPOK V', True, pygame.Color('white'))
         text1_rect = text1_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
@@ -361,15 +361,15 @@ class Game:
         red = pygame.Color(255, 0, 0)
         white = pygame.Color(255, 255, 255)
         # "GAME OVER"
-        font_big = pygame.font.Font("Tubes/font/SquareGame.otf", 90)
+        font_big = pygame.font.Font("font/SquareGame.otf", 90)
         game_over_surface = font_big.render('GAME OVER', True, red)
         game_over_rect = game_over_surface.get_rect(midtop=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4))
         # Skor akhir
-        font_score = pygame.font.Font("Tubes/font/SquareGame.otf", 40)
+        font_score = pygame.font.Font("font/SquareGame.otf", 40)
         score_surface = font_score.render(f'Final Score: {self.score}', True, white)
         score_rect = score_surface.get_rect(midtop=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         # Instruksi lanjut
-        font_small = pygame.font.Font("Tubes/font/SquareGame.otf", 30)
+        font_small = pygame.font.Font("font/SquareGame.otf", 30)
         info_surface = font_small.render('Press SPACE to return to Start', True, white)
         info_rect = info_surface.get_rect(midtop=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 60))
 
@@ -396,7 +396,7 @@ class Game:
     def pause_screen(self):
         pygame.mixer.music.stop()
         paused = True
-        font = pygame.font.Font("Tubes/font/ModernAesthetic-Personal.otf", 70)
+        font = pygame.font.Font("font/ModernAesthetic-Personal.otf", 70)
         pause_surface = font.render("PAUSED", True, pygame.Color('white'))
         pause_rect = pause_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 
@@ -420,7 +420,7 @@ class Game:
 
     # === MENAMPILKAN PLAYER ===
     def create_player(self):
-        self.player = Player("Tubes/img/playership2.png")
+        self.player = Player("img/playership2.png")
         sprite_group.add(self.player)
 
     # === MENAMPILKAN ENEMY ===
