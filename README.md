@@ -65,7 +65,6 @@ from pygame.locals import *  # Import konstanta pygame
 ## 📈 Mekanisme Permainan
 - Musuh akan muncul secara acak dari atas layar.
 - Jika peluru mengenai musuh, skor bertambah.
-- Setiap kelipatan 10 skor, level permainan meningkat.
 - Musuh yang tidak dihancurkan dan melewati bawah layar akan mengurangi nyawa pemain.
 - Permainan berakhir jika nyawa habis.
 
