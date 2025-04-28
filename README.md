@@ -54,11 +54,11 @@ from pygame.locals import *  # Import konstanta pygame
 ---
 
 ## 🕹️ Cara Bermain Game
-- ⬅️ Kiri: Gerakkan pesawat ke kiri
-- ➡️ Kanan: Gerakkan pesawat ke kanan
-- ⬆️ Atas: Tembakkan peluru
-- Enter: Mulai game dari menu utama
-- ESC: Keluar dari permainan
+- 🖱️ Gerakkan mouse ke kiri atau kanan untuk menggerakkan pesawat.
+- 🔫 Peluru akan menembak secara otomatis.
+- ⏎  Enter: Mulai game dari menu utama
+- ⏸️ Tekan Spasi untuk pause/sementara berhenti.
+- ⛔ ESC: Keluar dari permainan
 
 ---
 
