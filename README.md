@@ -10,14 +10,13 @@
 ---
 
 ## 📃 Deskripsi Proyek
-Game ini dirancang sebagai tugas akhir mata kuliah **Pemrograman Berorientasi Objek (PBO)** dengan tujuan melatih kemampuan dalam pengembangan game menggunakan Python. Pemain akan mengendalikan pesawat luar angkasa untuk bertahan dari serangan musuh, mengumpulkan skor, dan meningkatkan level permainan.
+Game ini dirancang sebagai tugas akhir mata kuliah **Pemrograman Berorientasi Objek (PBO)** dengan tujuan melatih kemampuan dalam pengembangan game menggunakan Python. Pemain akan mengendalikan pesawat luar angkasa untuk bertahan dari serangan musuh, dan mengumpulkan skor.
 
 ---
 
 ## 🎮 Fitur Utama
 - Kontrol pesawat dengan menggunakan Mouse
 - Menembak peluru ke musuh
-- Level meningkat setiap 10 skor
 - Tampilan antarmuka awal (main menu) dan game over
 - Nyawa terbatas (3 kali kesempatan)
 
