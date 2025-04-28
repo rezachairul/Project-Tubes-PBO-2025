@@ -49,7 +49,7 @@ from pygame.locals import *  # Import konstanta pygame
    ```
 3. Jalankan file game:
    ```bash
-   python starshipwar.py
+   python main.ipynb
    ```
 
 ---
