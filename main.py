@@ -13,31 +13,31 @@ pygame.display.set_caption('Stars Warship')  # Judul jendela game
 infoObject = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
 GAME_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
-pygame.mouse.set_visible(False)
+pygame.mouse.set_visible(True) # Ganti ke false klo dh siap game nya
 
 # === PATH GAMBAR (Image Resources) ===
 # Player & Enemies
-PLAYER_IMAGE = ''
-ENEMY_FAST_IMAGE = ''
-ENEMY_HORIZONTAL_IMAGE = ''
-ENEMY_VERTICAL_IMAGE = ''
-ENEMY_BOS_IMAGE = ''
+PLAYER_IMAGE = 'assets/img/playership.png'
+ENEMY_FAST_IMAGE = 'assets/img/enemy_fast.png'
+ENEMY_HORIZONTAL_IMAGE = 'assets/img/enemy_horizontal.png'
+ENEMY_VERTICAL_IMAGE = 'assets/img/enemy_vertical.png'
+ENEMY_BOS_IMAGE = 'assets/img/enemy_bos.png'
 
 # Bullet
-BULLET_PLAYER_IMAGE = ''
-BULLET_ENEMY_FAST_IMAGE = ''
-BULLET_ENEMY_HORIZONTAL_IMAGE = ''
-BULLET_ENEMY_VERTICAL_IMAGE = ''
-BULLET_ENEMY_BOS_IMAGE = ''
+BULLET_PLAYER_IMAGE = 'assets/img/bullet_player.png'
+BULLET_ENEMY_FAST_IMAGE = 'assets/img/bullet_enemy_fast.png'
+BULLET_ENEMY_HORIZONTAL_IMAGE = 'assets/img/bullet_enemy_horizontal.png'
+BULLET_ENEMY_VERTICAL_IMAGE = 'assets/img/bullet_enemy_vertical.png'
+BULLET_ENEMY_BOS_IMAGE = 'assets/img/bullet_enemy_bos.png'
 
 # === SUARA / AUDIO (Sound Resources & Playback) ===
-pygame.mixer.music.load('')
+pygame.mixer.music.load('assets/sound/music.wav')
 pygame.mixer.music.play(-1) # Loop backsound
 
 # Sound Effect
-EXPLOSION_SOUND = pygame.mixer.Sound('')
-BULLET_SOUND = pygame.mixer.Sound('')
-GAME_OVER_SOUND = pygame.mixer.Sound('')
+EXPLOSION_SOUND = pygame.mixer.Sound('assets/sound/audio_explosion.wav')
+BULLET_SOUND = pygame.mixer.Sound('assets/sound/audio_laser.wav')
+GAME_OVER_SOUND = pygame.mixer.Sound('assets/sound/Game Over Theme.mp3')
 
 # === FRAME CONTROL (Waktu & Kecepatan Game) ===
 GAME_CLOCK = pygame.time.Clock()
@@ -62,7 +62,30 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 """
 
 class Game:
+    def __init__(self):
+        pass
 
+    def start_screen(self):
+        print("Start screen ditampilkan")
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+
+            # Gambar latar belakang warna hitam
+            GAME_SCREEN.fill((0, 0, 0))
+
+            # Tampilkan teks judul
+            font = pygame.font.SysFont(None, 60)
+            text_surface = font.render("Stars Warship", True, (255, 255, 255))
+            text_rect = text_surface.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
+            GAME_SCREEN.blit(text_surface, text_rect)
+
+            pygame.display.update()
+            GAME_CLOCK.tick(GAME_FPS)
 
 # === MAIN FUNCTION ===
 # Fungsi utama untuk menjalankan game
