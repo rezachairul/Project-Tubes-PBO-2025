@@ -30,6 +30,21 @@ BULLET_ENEMY_HORIZONTAL_IMAGE = ''
 BULLET_ENEMY_VERTICAL_IMAGE = ''
 BULLET_ENEMY_BOS_IMAGE = ''
 
+# === SUARA / AUDIO (Sound Resources & Playback) ===
+pygame.mixer.music.load('')
+pygame.mixer.music.play(-1) # Loop backsound
+
+# Sound Effect
+EXPLOSION_SOUND = pygame.mixer.Sound('')
+BULLET_SOUND = pygame.mixer.Sound('')
+GAME_OVER_SOUND = pygame.mixer.Sound('')
+
+# === FRAME CONTROL (Waktu & Kecepatan Game) ===
+GAME_CLOCK = pygame.time.Clock()
+GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
+
+# === Kelas-kelas pada Game (Game Class) ===
+
 
 
 
