@@ -52,7 +52,11 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
     - Kecepatan jatuh acak
     - Ukuran bintang acak (1-2 piksel)
 """
-# Script Kelas Background Star
+class BackgroundStar(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
+    def update(self):
+        pass
 
 
 # === KELAS PLAYER (Player Class) ===
@@ -63,7 +67,21 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
     - Menembak peluru
     - Status hidup/mati & respawn
 """
-# Script Kelas Player
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
+
+    def update(self):
+        pass
+
+    def shoot(self):
+        pass
+
+    def dead(self):
+        pass
+
+    def respawn(self):
+        pass
 
 
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
@@ -72,10 +90,34 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
     Bisa digunakan sebagai vertical mover, horizontal mover, atau lainnya.
     Mengatur posisi, gerakan, dan logika tembakan.
 """
-# Script Kelas Base Enemy
+class BaseEnemy(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
 
+    def update(self):
+        pass
+
+    def _move(self):
+        pass
+    
+    def _shoot(self):
+        pass
+
+    def _fire_bullet(self):
+        pass
 
 # class child enemy => (BaseEnemy):
+class VerticalEnemy(BaseEnemy):
+    def __init__(self, start_pos=None):
+        super().__init__()
+
+class HorizontalEnemy(BaseEnemy):
+    def __init__(self, start_pos=None):
+        super().__init__()
+
+class FastEnemy(BaseEnemy):
+    def __init__(self, start_pos=None):
+        super().__init__()
 
 
 # === KELAS BULLET (Peluru) ===
@@ -84,8 +126,12 @@ Peluru yang ditembakkan oleh musuh.
 - Memiliki kecepatan dan ukuran tertentu
 - Membuat efek ledakan ketika mengenai target
 """
-# Script Kelas Bullet
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
 
+    def update(self):
+        pass
 
 # === KELAS EXPLOSION (Ledakan) ===
 """
@@ -94,8 +140,16 @@ Peluru yang ditembakkan oleh musuh.
     - Membuat efek suara ledakan
 """
 # Script Kelas Explosion
+class Explosion(pygame.sprite.Sprite):
+    ANIMATION_DELAY = 12 # Delay antara frame animasi
+    def __init__(self):
+        pass
 
+    def _load_image(self):
+        pass
 
+    def update(self):
+        pass
 
 # === KELAS GAME (Game Class) ===
 """
