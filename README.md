@@ -71,7 +71,7 @@ from pygame.locals import *  # Import konstanta pygame
 ---
 
 ## 📂 Struktur File
-- `main.ipynb`: File utama game yang memuat semua logika permainan.
+- `main.py`: File utama game yang memuat semua logika permainan.
 
 ---
 
