@@ -55,13 +55,13 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 class BackgroundStar(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        # Ukuran acak
-        self.radius = random.randint(1, 2)
+        # Ukuran bintang (acak)
+        self.radius = random.randint(1, 2) # Menghasilkan ukuran acak untuk bintang, antara 1 dan 2 piksel
         self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
         pygame.draw.circle(self.image, (255, 255, 255), (self.radius, self.radius), self.radius)
         
-        # Posisi awal acak
-        self.rect = self.image.get_rect()
+        # Posisi awal bintang (acak) Menentukan posisi acak untuk pusat orbit bintang di layar
+        self.rect = self.image.get_rect() #Mendapatkan rect (kotak pembatas) dari gambar bintang.
         self.center_x = random.randint(0, SCREEN_WIDTH)
         self.center_y = random.randint(0, SCREEN_HEIGHT)
         self.angle = random.uniform(0, 2 * math.pi)  # dalam radian
