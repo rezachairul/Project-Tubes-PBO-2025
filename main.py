@@ -1,6 +1,7 @@
 # === IMPORT LIBRARY ===
 import sys         # Untuk keluar dari game, contoh: sys.exit()
 import random      # Untuk angka atau pemilihan acak, misal spawn musuh/peluru
+import math        # Untuk operasi matematika seperti sin, cos, radians, dll (misalnya untuk gerakan melingkar)
 import time        # Untuk delay (jika dibutuhkan)
 import pygame      # Library utama untuk membuat game
 from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
@@ -13,7 +14,7 @@ pygame.display.set_caption('Stars Warship')  # Judul jendela game
 infoObject = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
 GAME_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
-pygame.mouse.set_visible(True) # Ganti ke false klo dh siap game nya
+pygame.mouse.set_visible(True) # Ganti ke False klo dh siap game nya
 
 # === PATH GAMBAR (Image Resources) ===
 # Player & Enemies
@@ -44,7 +45,6 @@ GAME_CLOCK = pygame.time.Clock()
 GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 
 # === Kelas-kelas pada Game (Game Class) ===
-
 # === KELAS BACKGROUND STAR (Bintang Latar Belakang) ===
 """
     Class untuk membuat bintang-bintang latar belakang yang jatuh dari atas layar:
@@ -54,9 +54,38 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 """
 class BackgroundStar(pygame.sprite.Sprite):
     def __init__(self):
-        pass
+        super().__init__()
+        # Ukuran acak
+        self.radius = random.randint(1, 2)
+        self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, (255, 255, 255), (self.radius, self.radius), self.radius)
+        
+        # Posisi awal acak
+        self.rect = self.image.get_rect()
+        self.center_x = random.randint(0, SCREEN_WIDTH)
+        self.center_y = random.randint(0, SCREEN_HEIGHT)
+        self.angle = random.uniform(0, 2 * math.pi)  # dalam radian
+
+        # Jarak dari pusat (untuk gerakan melingkar)
+        self.orbit_radius = random.randint(10, 100)
+        self.rotation_speed = random.uniform(0.001, 0.01)
+
+        # Twinkle effect
+        self.alpha_base = random.randint(150, 255)
+        self.twinkle_speed = random.uniform(0.05, 0.15)
+        self.twinkle_angle = random.uniform(0, 2 * math.pi)
+
     def update(self):
-        pass
+        # Perbarui posisi melingkar
+        self.angle += self.rotation_speed
+        self.rect.x = int(self.center_x + self.orbit_radius * math.cos(self.angle))
+        self.rect.y = int(self.center_y + self.orbit_radius * math.sin(self.angle))
+
+        # Efek kedipan
+        self.twinkle_angle += self.twinkle_speed
+        alpha = self.alpha_base + int(50 * math.sin(self.twinkle_angle))
+        alpha = max(50, min(255, alpha))
+        self.image.set_alpha(alpha)
 
 
 # === KELAS PLAYER (Player Class) ===
@@ -133,6 +162,7 @@ class BosEnemy(BaseEnemy):
     def __init__(self):
         super().__init__()
 
+
 # === KELAS BULLET (Peluru) ===
 """
     - Peluru yang ditembakkan oleh musuh dan player.
@@ -145,6 +175,7 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         pass
+
 
 # === KELAS EXPLOSION (Ledakan) ===
 """
@@ -164,6 +195,7 @@ class Explosion(pygame.sprite.Sprite):
     def update(self):
         pass
 
+
 # === KELAS GAME (Game Class) ===
 """
     Kelas utama untuk mengatur logika game:
@@ -179,7 +211,10 @@ class Explosion(pygame.sprite.Sprite):
 
 class Game:
     def __init__(self):
-        pass
+        self.star_group = pygame.sprite.Group()
+        for _ in range(100):  # Jumlah bintang
+            star = BackgroundStar()     # Pastikan class BackgroundStar kamu udah siap
+            self.star_group.add(star)
 
     def start_screen(self):
         print("Start screen ditampilkan")
@@ -191,8 +226,12 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            # Gambar latar belakang warna hitam
+            # Gambar latar belakang hitam
             GAME_SCREEN.fill((0, 0, 0))
+
+            # Update & gambar bintang-bintang
+            self.star_group.update()
+            self.star_group.draw(GAME_SCREEN)
 
             # Tampilkan teks judul
             font = pygame.font.SysFont(None, 60)
