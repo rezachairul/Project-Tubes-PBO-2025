@@ -92,10 +92,11 @@ class Player(pygame.sprite.Sprite):
 """
 class BaseEnemy(pygame.sprite.Sprite):
     def __init__(self):
-        pass
+        super().__init__()
 
     def update(self):
-        pass
+        self._move()
+        self._shoot()
 
     def _move(self):
         pass
@@ -108,15 +109,15 @@ class BaseEnemy(pygame.sprite.Sprite):
 
 # class child enemy => (BaseEnemy):
 class VerticalEnemy(BaseEnemy):
-    def __init__(self, start_pos=None):
+    def __init__(self):
         super().__init__()
 
 class HorizontalEnemy(BaseEnemy):
-    def __init__(self, start_pos=None):
+    def __init__(self):
         super().__init__()
 
 class FastEnemy(BaseEnemy):
-    def __init__(self, start_pos=None):
+    def __init__(self):
         super().__init__()
 
 
