@@ -45,6 +45,55 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 
 # === Kelas-kelas pada Game (Game Class) ===
 
+# === KELAS BACKGROUND STAR (Bintang Latar Belakang) ===
+"""
+    Class untuk membuat bintang-bintang latar belakang yang jatuh dari atas layar:
+    - Posisi acak di layar
+    - Kecepatan jatuh acak
+    - Ukuran bintang acak (1-2 piksel)
+"""
+# Script Kelas Background Star
+
+
+# === KELAS PLAYER (Player Class) ===
+"""
+    Class untuk mengatur logika utama karakter pemain:
+    - Pergerakan mengikuti mouse
+    - Efek transparan saat respawn
+    - Menembak peluru
+    - Status hidup/mati & respawn
+"""
+# Script Kelas Player
+
+
+# === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
+"""
+    Class dasar untuk musuh.
+    Bisa digunakan sebagai vertical mover, horizontal mover, atau lainnya.
+    Mengatur posisi, gerakan, dan logika tembakan.
+"""
+# Script Kelas Base Enemy
+
+
+# class child enemy => (BaseEnemy):
+
+
+# === KELAS BULLET (Peluru) ===
+"""
+Peluru yang ditembakkan oleh musuh.
+- Memiliki kecepatan dan ukuran tertentu
+- Membuat efek ledakan ketika mengenai target
+"""
+# Script Kelas Bullet
+
+
+# === KELAS EXPLOSION (Ledakan) ===
+"""
+    Class untuk efek ledakan saat musuh terkena peluru.
+    - Memiliki beberapa frame untuk animasi ledakan
+    - Membuat efek suara ledakan
+"""
+# Script Kelas Explosion
 
 
 
