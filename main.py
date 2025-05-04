@@ -66,6 +66,7 @@ class BackgroundStar(pygame.sprite.Sprite):
     - Efek transparan saat respawn
     - Menembak peluru
     - Status hidup/mati & respawn
+    - Buff: Shield (Perlindungan tambahan)
 """
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -86,9 +87,9 @@ class Player(pygame.sprite.Sprite):
 
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
 """
-    Class dasar untuk musuh.
-    Bisa digunakan sebagai vertical mover, horizontal mover, atau lainnya.
-    Mengatur posisi, gerakan, dan logika tembakan.
+    - Class dasar untuk musuh.
+    - Bisa digunakan sebagai vertical mover, horizontal mover, atau lainnya.
+    - Mengatur posisi, gerakan, dan logika tembakan.
 """
 class BaseEnemy(pygame.sprite.Sprite):
     def __init__(self):
@@ -108,6 +109,14 @@ class BaseEnemy(pygame.sprite.Sprite):
         pass
 
 # class child enemy => (BaseEnemy):
+'''
+    - Kelas anak dari BaseEnemy.
+    - Digunakan untuk musuh yang bergerak secara vertikal (atas/bawah).
+    - Digunakan untuk musuh yang bergerak secara horizontal (kiri/kanan).
+    - Digunakan untuk musuh yang bergerak dengan kecepatan tinggi.
+    - Digunakan untuk musuh jenis bos dengan perilaku lebih kompleks.
+    - Bisa memiliki pola gerakan dan tembakan yang lebih rumit.
+'''
 class VerticalEnemy(BaseEnemy):
     def __init__(self):
         super().__init__()
@@ -120,12 +129,15 @@ class FastEnemy(BaseEnemy):
     def __init__(self):
         super().__init__()
 
+class BosEnemy(BaseEnemy):
+    def __init__(self):
+        super().__init__()
 
 # === KELAS BULLET (Peluru) ===
 """
-Peluru yang ditembakkan oleh musuh.
-- Memiliki kecepatan dan ukuran tertentu
-- Membuat efek ledakan ketika mengenai target
+    - Peluru yang ditembakkan oleh musuh dan player.
+    - Memiliki kecepatan dan ukuran tertentu
+    - Membuat efek ledakan ketika mengenai target
 """
 class Bullet(pygame.sprite.Sprite):
     def __init__(self):
@@ -136,7 +148,7 @@ class Bullet(pygame.sprite.Sprite):
 
 # === KELAS EXPLOSION (Ledakan) ===
 """
-    Class untuk efek ledakan saat musuh terkena peluru.
+    - Class untuk efek ledakan saat musuh terkena peluru.
     - Memiliki beberapa frame untuk animasi ledakan
     - Membuat efek suara ledakan
 """
