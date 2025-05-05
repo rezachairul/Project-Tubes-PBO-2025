@@ -62,6 +62,7 @@ explosion_group = pygame.sprite.Group()
 sprite_group = pygame.sprite.Group()
 
 # === Kelas-kelas pada Game (Game Class) ===
+
 # === KELAS BACKGROUND STAR (Bintang Latar Belakang) ===
 """
     Class untuk membuat bintang-bintang latar belakang yang jatuh dari atas layar:
