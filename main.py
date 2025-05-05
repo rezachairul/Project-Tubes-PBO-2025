@@ -47,13 +47,16 @@ GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 # === SPRITE GROUPS (Kumpulan Objek/Game Entities) ===
 background_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
-enemy_group = pygame.sprite.Group()
-enemy2_group = pygame.sprite.Group()
-sideenemy_group = pygame.sprite.Group()
+enemy_fast_group = pygame.sprite.Group()
+enemy_vertical_group = pygame.sprite.Group()
+enemy_horizontal_group = pygame.sprite.Group()
+enemy_bos_group = pygame.sprite.Group()
 
-player_bullet_group = pygame.sprite.Group()
-enemy_bullet_group = pygame.sprite.Group()
-sideenemy_bullet_group = pygame.sprite.Group()
+bullet_player_group = pygame.sprite.Group()
+bullet_enemy_fast_group = pygame.sprite.Group()
+bullet_enemy_vertical_group = pygame.sprite.Group()
+bullet_enemy_horizontal_group = pygame.sprite.Group()
+bullet_enemy_bos_group = pygame.sprite.Group()
 
 explosion_group = pygame.sprite.Group()
 sprite_group = pygame.sprite.Group()
@@ -113,19 +116,39 @@ class BackgroundStar(pygame.sprite.Sprite):
 """
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        pass
+        super().__init__()
+        self.lives = 5
+        self.score = 0
+        # self.image, self.rect, dll
 
     def update(self):
+        # Gerakan dan aksi lainnya
         pass
 
     def shoot(self):
+        # Nembak peluru
+        pass
+
+    def hit(self):
+        # Kena musuh
         pass
 
     def dead(self):
+        # Kondisi kalau nyawa habis
         pass
 
     def respawn(self):
+        # Muncul kembali setelah mati (kalau ada fitur respawn)
         pass
+
+    def add_score(self, value):
+        # Tambah skor
+        pass
+
+    def add_life(self):
+        # Tambah nyawa (misal setelah tembak FastEnemy)
+        pass
+
 
 
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
@@ -135,8 +158,10 @@ class Player(pygame.sprite.Sprite):
     - Mengatur posisi, gerakan, dan logika tembakan.
 """
 class BaseEnemy(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, health=1, score_value=100):
         super().__init__()
+        self.health = health
+        self.score_value = score_value
 
     def update(self):
         self._move()
@@ -144,12 +169,21 @@ class BaseEnemy(pygame.sprite.Sprite):
 
     def _move(self):
         pass
-    
+
     def _shoot(self):
         pass
 
     def _fire_bullet(self):
         pass
+
+    def take_hit(self):
+        # Dikena peluru player
+        pass
+
+    def dead(self):
+        # Kalau health <= 0
+        pass
+
 
 # class child enemy => (BaseEnemy):
 '''
@@ -162,19 +196,20 @@ class BaseEnemy(pygame.sprite.Sprite):
 '''
 class VerticalEnemy(BaseEnemy):
     def __init__(self):
-        super().__init__()
+        super().__init__(health=1, score_value=100)
 
 class HorizontalEnemy(BaseEnemy):
     def __init__(self):
-        super().__init__()
+        super().__init__(health=2, score_value=200)
 
 class FastEnemy(BaseEnemy):
     def __init__(self):
-        super().__init__()
+        super().__init__(health=1, score_value=300)
 
 class BosEnemy(BaseEnemy):
     def __init__(self):
-        super().__init__()
+        super().__init__(health=10, score_value=1000)
+
 
 
 # === KELAS BULLET (Peluru) ===
@@ -183,11 +218,36 @@ class BosEnemy(BaseEnemy):
     - Memiliki kecepatan dan ukuran tertentu
     - Membuat efek ledakan ketika mengenai target
 """
+# === KELAS BULLET (Peluru) ===
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self):
-        pass
+    def __init__(self, x, y, direction, speed, damage):
+        super().__init__()
+        self.image = None  # Gambar peluru (akan diubah sesuai jenisnya)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)  # Posisi awal peluru
+        self.direction = direction  # Arah tembakan (misalnya atas, bawah, kiri, kanan)
+        self.speed = speed  # Kecepatan peluru
+        self.damage = damage  # Damage yang diberikan peluru
+        self.active = True  # Menyimpan status aktif peluru (terbentur atau tidak)
 
     def update(self):
+        # Update posisi peluru (bergerak sesuai arah)
+        self._move()
+
+    def _move(self):
+        # Menentukan gerakan peluru sesuai dengan arah
+        pass
+
+    def check_collision(self, sprite_group):
+        # Mengecek tabrakan dengan objek lain (misalnya musuh)
+        pass
+
+    def hit(self):
+        # Logika saat peluru terkena objek (misalnya musuh)
+        pass
+
+    def deactivate(self):
+        # Menonaktifkan peluru (misalnya ketika sudah keluar dari layar atau bertabrakan)
         pass
 
 
@@ -199,15 +259,26 @@ class Bullet(pygame.sprite.Sprite):
 """
 # Script Kelas Explosion
 class Explosion(pygame.sprite.Sprite):
-    ANIMATION_DELAY = 12 # Delay antara frame animasi
-    def __init__(self):
-        pass
-
-    def _load_image(self):
-        pass
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = None  # Gambar atau animasi ledakan
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)  # Posisi ledakan
+        self.life_duration = 12  # Durasi hidup ledakan (misalnya berapa frame)
+        self.timer = 0  # Timer untuk menghitung durasi hidup ledakan
 
     def update(self):
+        # Update ledakan (mengurangi durasi hidup)
+        self._countdown()
+
+    def _countdown(self):
+        # Menurunkan timer dan menghapus ledakan setelah waktu habis
         pass
+
+    def deactivate(self):
+        # Menonaktifkan ledakan setelah selesai (misalnya setelah animasi selesai)
+        pass
+
 
 
 # === KELAS GAME (Game Class) ===
@@ -225,34 +296,114 @@ class Explosion(pygame.sprite.Sprite):
 
 class Game:
     def __init__(self):
-        self.star_group = pygame.sprite.Group()
-        for _ in range(100):  # Jumlah bintang
-            star = BackgroundStar()     # Pastikan class BackgroundStar kamu udah siap
-            self.star_group.add(star)
+        self.running = True
+        self.playing = False
+        self.paused = False
+        self.game_over = False
+
+        self.font = pygame.font.SysFont('arial', 36)
+        self.big_font = pygame.font.SysFont('arial', 72)
+
+        self.background_stars = pygame.sprite.Group()
+        for _ in range(100):  # Jumlah bintang latar
+            star = BackgroundStar()
+            self.background_stars.add(star)
 
     def start_screen(self):
-        print("Start screen ditampilkan")
-        running = True
-        while running:
+        while not self.playing:
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    running = False
                     pygame.quit()
                     sys.exit()
+                elif event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                    self.playing = True
 
-            # Gambar latar belakang hitam
             GAME_SCREEN.fill((0, 0, 0))
+            self.background_stars.update()
+            self.background_stars.draw(GAME_SCREEN)
 
-            # Update & gambar bintang-bintang
-            self.star_group.update()
-            self.star_group.draw(GAME_SCREEN)
+            title = self.big_font.render("Stars Warship", True, (255, 255, 255))
+            start_text = self.font.render("Press any key to start", True, (255, 255, 255))
+            GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
+            GAME_SCREEN.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2))
 
-            # Tampilkan teks judul
-            font = pygame.font.SysFont(None, 60)
-            text_surface = font.render("Stars Warship", True, (255, 255, 255))
-            text_rect = text_surface.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
-            GAME_SCREEN.blit(text_surface, text_rect)
+            pygame.display.update()
+            GAME_CLOCK.tick(GAME_FPS)
 
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
+
+    def handle_events(self):
+        pass
+
+    def check_collision(self):
+        pass
+
+    def spawn_enemies(self):
+        pass
+
+    def shoot_bullets(self):
+        pass
+
+    def game_loop(self):
+        while self.running:
+            self.handle_events()
+
+            if self.paused:
+                self.pause_screen()
+                continue
+
+            if self.game_over:
+                self.game_over_screen()
+                continue
+
+            self.update()
+            self.draw()
+            pygame.display.update()
+            GAME_CLOCK.tick(GAME_FPS)
+
+    def pause_screen(self):
+        pause_text = self.font.render("Paused - Press P to resume", True, (255, 255, 255))
+        while self.paused:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == KEYDOWN and event.key == K_p:
+                    self.paused = False
+
+            GAME_SCREEN.blit(pause_text, (SCREEN_WIDTH // 2 - pause_text.get_width() // 2, SCREEN_HEIGHT // 2))
+            pygame.display.update()
+            GAME_CLOCK.tick(10)
+
+    def game_over_screen(self):
+        GAME_OVER_SOUND.play()
+        over_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
+        restart_text = self.font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+
+        while self.game_over:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_r:
+                        self.__init__()
+                        self.start_screen()
+                        self.game_loop()
+                    elif event.key == K_q:
+                        pygame.quit()
+                        sys.exit()
+
+            GAME_SCREEN.fill((0, 0, 0))
+            self.background_stars.update()
+            self.background_stars.draw(GAME_SCREEN)
+
+            GAME_SCREEN.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, SCREEN_HEIGHT // 3))
+            GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, SCREEN_HEIGHT // 2))
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
 
