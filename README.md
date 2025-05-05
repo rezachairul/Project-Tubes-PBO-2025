@@ -1,6 +1,6 @@
-# 🚀 Starship War
+# 🚀 Star Warship
 
-**Starship War** adalah game arcade sederhana bertema luar angkasa yang dikembangkan menggunakan Python dan pustaka **Pygame**. Pemain mengendalikan pesawat luar angkasa untuk menembak dan menghindari serangan musuh yang datang dari atas layar.
+**Star Warship** adalah game arcade sederhana bertema luar angkasa yang dikembangkan menggunakan Python dan pustaka **Pygame**. Pemain mengendalikan pesawat luar angkasa untuk menembak dan menghindari serangan musuh yang datang dari atas layar.
 
 ---
 
