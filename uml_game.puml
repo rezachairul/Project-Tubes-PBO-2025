@@ -1,0 +1,65 @@
+@startuml StarWarship
+class Game {
+  +update()
+  +draw()
+  +handle_events()
+  +check_collision()
+  -player: Player
+  -enemies: List<BaseEnemy>
+  -bullets: List<Bullet>
+  -explosions: List<Explosion>
+  -stars: List<BackgroundStar>
+}
+
+class Player {
+  +update()
+  +draw()
+  +shoot()
+  +hit()
+  +dead()
+  -lives: int
+  -score: int
+}
+
+class Bullet {
+  +update()
+  +draw()
+  +hit()
+  -position: Vector2
+  -direction: Vector2
+  -damage: int
+}
+
+class BaseEnemy {
+  +update()
+  +draw()
+  +take_hit(damage: int)
+  +dead()
+  -health: int
+  -position: Vector2
+}
+
+class Explosion {
+  +update()
+  +draw()
+  -lifetime: float
+}
+
+class BackgroundStar {
+  +update()
+  +draw()
+}
+
+Game --> Player : manages
+Game --> Bullet : manages
+Game --> BaseEnemy : manages
+Game --> Explosion : manages
+Game --> BackgroundStar : manages
+
+Player --> Bullet : creates
+Bullet --> BaseEnemy : hits
+BaseEnemy --> Explosion : creates
+Game --> Explosion : creates
+
+BaseEnemy <|-- ChildEnemy
+@enduml

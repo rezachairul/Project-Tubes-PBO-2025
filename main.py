@@ -151,7 +151,6 @@ class Player(pygame.sprite.Sprite):
         pass
 
 
-
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
 """
     - Class dasar untuk musuh.
@@ -210,7 +209,6 @@ class FastEnemy(BaseEnemy):
 class BosEnemy(BaseEnemy):
     def __init__(self):
         super().__init__(health=10, score_value=1000)
-
 
 
 # === KELAS BULLET (Peluru) ===
