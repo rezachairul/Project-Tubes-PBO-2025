@@ -44,6 +44,20 @@ GAME_OVER_SOUND = pygame.mixer.Sound('assets/sound/Game Over Theme.mp3')
 GAME_CLOCK = pygame.time.Clock()
 GAME_FPS = 60 # Frames per second, untuk mengatur kelancaran game
 
+# === SPRITE GROUPS (Kumpulan Objek/Game Entities) ===
+background_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+enemy_group = pygame.sprite.Group()
+enemy2_group = pygame.sprite.Group()
+sideenemy_group = pygame.sprite.Group()
+
+player_bullet_group = pygame.sprite.Group()
+enemy_bullet_group = pygame.sprite.Group()
+sideenemy_bullet_group = pygame.sprite.Group()
+
+explosion_group = pygame.sprite.Group()
+sprite_group = pygame.sprite.Group()
+
 # === Kelas-kelas pada Game (Game Class) ===
 # === KELAS BACKGROUND STAR (Bintang Latar Belakang) ===
 """
