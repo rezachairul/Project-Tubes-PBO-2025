@@ -26,9 +26,9 @@ ENEMY_BOS_IMAGE = 'assets/img/enemy_bos.png'
 
 # Bullet
 BULLET_PLAYER_IMAGE = 'assets/img/bullet_player.png'
-BULLET_ENEMY_FAST_IMAGE = 'assets/img/bullet_enemy_fast.png'
-BULLET_ENEMY_HORIZONTAL_IMAGE = 'assets/img/bullet_enemy_horizontal.png'
-BULLET_ENEMY_VERTICAL_IMAGE = 'assets/img/bullet_enemy_vertical.png'
+BULLET_ENEMY_FAST_IMAGE = 'assets/img/bullet_enemy.png'
+BULLET_ENEMY_HORIZONTAL_IMAGE = 'assets/img/bullet_enemy.png'
+BULLET_ENEMY_VERTICAL_IMAGE = 'assets/img/bullet_enemy.png'
 BULLET_ENEMY_BOS_IMAGE = 'assets/img/bullet_enemy_bos.png'
 
 # === SUARA / AUDIO (Sound Resources & Playback) ===
