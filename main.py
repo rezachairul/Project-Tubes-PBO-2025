@@ -32,7 +32,7 @@ BULLET_ENEMY_VERTICAL_IMAGE = 'assets/img/bullet_enemy.png'
 BULLET_ENEMY_BOS_IMAGE = 'assets/img/bullet_enemy_bos.png'
 
 # === SUARA / AUDIO (Sound Resources & Playback) ===
-pygame.mixer.music.load('assets/sound/music.wav')
+pygame.mixer.music.load('assets/sound/music-alien.mp3')
 pygame.mixer.music.play(-1) # Loop backsound
 
 # Sound Effect
