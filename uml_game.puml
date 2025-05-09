@@ -59,6 +59,9 @@ Game --> BackgroundStar : manages
 Player --> Bullet : creates
 Bullet --> BaseEnemy : hits
 BaseEnemy --> Explosion : creates
+BaseEnemy --> Bullet : creates
+Bullet --> Player : hits
+Player --> Explosion : creates
 Game --> Explosion : creates
 
 BaseEnemy <|-- ChildEnemy

@@ -113,42 +113,121 @@ class BackgroundStar(pygame.sprite.Sprite):
     - Efek transparan saat respawn
     - Menembak peluru
     - Status hidup/mati & respawn
-    - Buff: Shield (Perlindungan tambahan)
+    - Buff: Shield (Perlindungan tambahan jika bisa kalahin 1 fast enemy) + Add Shoot (bisa nambah 1 tembakan (maks 3) jika bisa kalahin 1 bos)
 """
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
+        self.image = self.image_original.copy()
+        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.rect = self.image.get_rect(center=(400, 500))
+
         self.lives = 5
         self.score = 0
-        # self.image, self.rect, dll
+        self.shield = False
+        self.max_shoot = 1
+        self.current_shoot = 1
+
+        # Invulnerability
+        self.invulnerable = False
+        self.invulnerable_timer = 0
+        self.respawn_duration = 3000  # ms
+
+        # Auto-invulnerability (buff ketika skor >= 500)
+        self.auto_invulnerable = False
+        self.auto_invul_start = 0
+        self.auto_invul_duration = random.randint(5000, 10000)
+
+        # Kedip-kedip efek
+        self.visible = True
+        self.blink_timer = 0
+        self.blink_interval = 200  # ms
 
     def update(self):
-        # Gerakan dan aksi lainnya
-        pass
+        # Ikuti mouse
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.rect.centerx = mouse_x
+        self.rect.centery = mouse_y
+
+        now = pygame.time.get_ticks()
+
+        if self.invulnerable:
+            # Blinking effect
+            if now - self.blink_timer > self.blink_interval:
+                self.blink_timer = now
+                self.visible = not self.visible
+                if self.visible:
+                    self.image.set_alpha(128)
+                else:
+                    self.image.set_alpha(0)
+
+            # Akhir invul berdasarkan tipe
+            if self.auto_invulnerable:
+                if now - self.auto_invul_start > self.auto_invul_duration:
+                    self.auto_invulnerable = False
+                    self.invulnerable = False
+                    self.image.set_alpha(255)
+            else:
+                if now - self.invulnerable_timer > self.respawn_duration:
+                    self.invulnerable = False
+                    self.image.set_alpha(255)
+        else:
+            self.image.set_alpha(255)
 
     def shoot(self):
-        # Nembak peluru
-        pass
+        # Tambah peluru ke grup sesuai jumlah tembakan aktif
+        for i in range(self.current_shoot):
+            bullet = Bullet(self.rect.centerx + (i - self.current_shoot // 2) * 10, self.rect.top)
+            bullet_player_group.add(bullet)
+        BULLET_SOUND.play()
 
     def hit(self):
-        # Kena musuh
-        pass
+        if self.invulnerable:
+            return
+
+        if self.shield:
+            self.shield = False
+        else:
+            self.lives -= 1
+            EXPLOSION_SOUND.play()
+            if self.lives <= 0:
+                self.dead()
+            else:
+                self.respawn()
 
     def dead(self):
-        # Kondisi kalau nyawa habis
-        pass
+        GAME_OVER_SOUND.play()
+        self.kill()
 
     def respawn(self):
-        # Muncul kembali setelah mati (kalau ada fitur respawn)
-        pass
+        self.rect.center = (400, 500)
+        self.invulnerable = True
+        self.invulnerable_timer = pygame.time.get_ticks()
+        self.blink_timer = pygame.time.get_ticks()
 
     def add_score(self, value):
-        # Tambah skor
-        pass
+        self.score += value
+        if self.score >= 500 and not self.auto_invulnerable:
+            self.activate_auto_invul()
 
     def add_life(self):
-        # Tambah nyawa (misal setelah tembak FastEnemy)
-        pass
+        self.lives += 1
+
+    def gain_shield(self):
+        self.shield = True
+
+    def upgrade_shoot(self):
+        if self.current_shoot < 3:
+            self.current_shoot += 1
+    
+    def activate_auto_invul(self):
+        self.auto_invulnerable = True
+        self.invulnerable = True
+        self.auto_invul_start = pygame.time.get_ticks()
+        self.blink_timer = pygame.time.get_ticks()
+        self.image.set_alpha(128)
+
 
 
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
@@ -303,10 +382,16 @@ class Game:
         self.font = pygame.font.SysFont('arial', 36)
         self.big_font = pygame.font.SysFont('arial', 72)
 
+        # === Background Star ===
         self.background_stars = pygame.sprite.Group()
         for _ in range(100):  # Jumlah bintang latar
             star = BackgroundStar()
             self.background_stars.add(star)
+
+        # === Player ===
+        self.player = Player()
+        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.player)
 
     def start_screen(self):
         while not self.playing:
@@ -330,13 +415,23 @@ class Game:
             GAME_CLOCK.tick(GAME_FPS)
 
     def update(self):
-        pass
+        self.background_stars.update()
+        self.all_sprites.update()
 
     def draw(self):
-        pass
+        GAME_SCREEN.fill((0, 0, 0))
+        self.background_stars.draw(GAME_SCREEN)
+        self.all_sprites.draw(GAME_SCREEN)
 
     def handle_events(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                self.running = False
+            elif event.type == KEYDOWN:
+                if event.key == K_p:
+                    self.paused = not self.paused
+            elif event.type == MOUSEBUTTONDOWN:
+                self.player.shoot()
 
     def check_collision(self):
         pass
@@ -411,3 +506,4 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.start_screen()
+    game.game_loop()
