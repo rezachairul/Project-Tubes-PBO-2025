@@ -6,7 +6,7 @@ import pygame      # Library utama untuk membuat game
 from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
 from core.utils import bullet_player_group
-from core.resources import BULLET_SOUND, EXPLOSION_SOUND, GAME_OVER_SOUND
+from core.resources import BULLET_SOUND, EXPLOSION_SOUND, GAME_OVER_SOUND, BULLET_PLAYER_IMAGE
 
 from entities.Bullet import Bullet
 from entities.Explosion import Explosion
@@ -21,7 +21,7 @@ from entities.Explosion import Explosion
     - Buff: Shield (Perlindungan tambahan jika bisa kalahin 1 fast enemy) + Add Shoot (bisa nambah 1 tembakan (maks 3) jika bisa kalahin 1 bos)
 """
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, bullet_group):
         super().__init__()
         self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
         self.image = self.image_original.copy()
@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.shield = False
         self.max_shoot = 1
         self.current_shoot = 1
+        self.bullet_group = bullet_group
 
         # Invulnerability
         self.invulnerable = False
@@ -83,8 +84,17 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         # Tambah peluru ke grup sesuai jumlah tembakan aktif
         for i in range(self.current_shoot):
-            bullet = Bullet(self.rect.centerx + (i - self.current_shoot // 2) * 10, self.rect.top)
-            bullet_player_group.add(bullet)
+            # bullet = Bullet(self.rect.centerx + (i - self.current_shoot // 2) * 10, self.rect.top)
+            bullet = Bullet(
+                x=self.rect.centerx + (i - self.current_shoot // 2) * 10,
+                y=self.rect.top,
+                direction=(0, -1),
+                speed=10,
+                damage=1,
+                image=BULLET_PLAYER_IMAGE,
+                is_player=True
+            )
+            self.bullet_group.add(bullet)
         BULLET_SOUND.play()
 
     def hit(self):

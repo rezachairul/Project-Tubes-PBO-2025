@@ -10,6 +10,8 @@ from core.utils import *
 from core.resources import *
 from core.game import *
 
+from core.utils import bullet_player_group
+
 from entities.BackgroundStar import *
 from entities.Player import *
 from entities.enemies import *
@@ -24,6 +26,10 @@ class Game:
         self.font = pygame.font.Font('assets/font/HUTheGame.ttf', 36)
         self.start_font = pygame.font.Font('assets/font/Gameplay.ttf', 72)
 
+        self.bullet_player_group = pygame.sprite.Group()
+        self.player = Player(self.bullet_player_group)
+
+
         # === Background Star ===
         self.background_stars = pygame.sprite.Group()
         for _ in range(100):  # Jumlah bintang latar
@@ -31,7 +37,7 @@ class Game:
             self.background_stars.add(star)
 
         # === Player ===
-        self.player = Player()
+        # self.player = Player()
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
 
@@ -60,11 +66,14 @@ class Game:
     def update(self):
         self.background_stars.update()
         self.all_sprites.update()
+        self.bullet_player_group.update()
+
 
     def draw(self):
         GAME_SCREEN.fill((0, 0, 0))
         self.background_stars.draw(GAME_SCREEN)
         self.all_sprites.draw(GAME_SCREEN)
+        self.bullet_player_group.draw(GAME_SCREEN)
 
     def handle_events(self):
         for event in pygame.event.get():
