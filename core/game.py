@@ -10,7 +10,8 @@ from core.utils import *
 from core.resources import *
 from core.game import *
 
-from entities import *
+from entities.BackgroundStar import *
+from entities.Player import *
 from entities.enemies import *
 
 class Game:
@@ -20,8 +21,8 @@ class Game:
         self.paused = False
         self.game_over = False
 
-        self.font = pygame.font.SysFont('arial', 36)
-        self.big_font = pygame.font.SysFont('arial', 72)
+        self.font = pygame.font.Font('assets/font/HUTheGame.ttf', 36)
+        self.start_font = pygame.font.Font('assets/font/Gameplay.ttf', 72)
 
         # === Background Star ===
         self.background_stars = pygame.sprite.Group()
@@ -34,21 +35,22 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
 
+    # Start Screen
     def start_screen(self):
         while not self.playing:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                elif event.type == KEYDOWN and event.key == K_SPACE:
                     self.playing = True
 
             GAME_SCREEN.fill((0, 0, 0))
             self.background_stars.update()
             self.background_stars.draw(GAME_SCREEN)
 
-            title = self.big_font.render("Stars Warship", True, (255, 255, 255))
-            start_text = self.font.render("Press any key to start", True, (255, 255, 255))
+            title = self.start_font.render("Stars Warship", True, (255, 255, 255))
+            start_text = self.font.render("Press SPACE to start", True, (255, 255, 255))
             GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
             GAME_SCREEN.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2))
 
@@ -100,6 +102,7 @@ class Game:
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
 
+    # Pause Screen
     def pause_screen(self):
         pause_text = self.font.render("Paused - Press P to resume", True, (255, 255, 255))
         while self.paused:
@@ -114,9 +117,10 @@ class Game:
             pygame.display.update()
             GAME_CLOCK.tick(10)
 
+    # Game Over Screen
     def game_over_screen(self):
         GAME_OVER_SOUND.play()
-        over_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
+        over_text = self.start_font.render("GAME OVER", True, (255, 0, 0))
         restart_text = self.font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
 
         while self.game_over:
