@@ -48,7 +48,7 @@ from pygame.locals import *  # Import konstanta pygame
    ```
 3. Jalankan file game:
    ```bash
-   python main.ipynb
+   python main.py
    ```
 
 ---
