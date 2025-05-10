@@ -1,16 +1,14 @@
-# main.py
+# core/game.py
 
 # === IMPORT LIBRARY ===
 import sys         # Untuk keluar dari game, contoh: sys.exit()
-import random      # Untuk angka atau pemilihan acak, misal spawn musuh/peluru
-import math        # Untuk operasi matematika seperti sin, cos, radians, dll (misalnya untuk gerakan melingkar)
-import time        # Untuk delay (jika dibutuhkan)
 import pygame      # Library utama untuk membuat game
 from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
 from core.config import GAME_SCREEN, SCREEN_HEIGHT, SCREEN_WIDTH, GAME_CLOCK, GAME_FPS
 from core.utils import *
 from core.resources import *
+from core.game import *
 
 from entities import *
 from entities.enemies import *
@@ -143,39 +141,3 @@ class Game:
             GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, SCREEN_HEIGHT // 2))
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
-
-# === MAIN FUNCTION ===
-# Fungsi utama untuk menjalankan game
-if __name__ == '__main__':
-    game = Game()
-    game.start_screen()
-    game.game_loop()
-
-
-# stars_warship/
-# ├── main.py
-# ├── core/
-# │   ├── __init__.py
-# │   ├── config.py           # Konfigurasi umum (layar, FPS, dll)
-# │   ├── resources.py        # Path gambar, suara, dan loading-nya
-# │   ├── game.py             # Inisialisasi dan loop utama game (kalau kamu pisahkan main loop)
-# │   ├── utils.py            # Fungsi bantu, misalnya konversi, atau tools lain
-# ├── entities/
-# │   ├── __init__.py
-# │   ├── player.py           # Class Player
-# │   ├── bullet.py           # Class Bullet
-# │   ├── explosion.py        # Class Explosion
-# │   ├── background_star.py  # Class BackgroundStar
-# │   └── enemies/
-# │       ├── __init__.py
-# │       ├── base_enemy.py   # BaseEnemy
-# │       ├── vertical.py     # VerticalEnemy
-# │       ├── horizontal.py   # HorizontalEnemy
-# │       ├── fast.py         # FastEnemy
-# │       └── boss.py         # BosEnemy
-# ├── assets/
-# │   ├── img/
-# │   │   └── ...             # Gambar sprite
-# │   └── sound/
-# │       └── ...             # File audio
-# └── README.md
