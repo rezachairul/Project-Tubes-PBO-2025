@@ -72,32 +72,17 @@ from pygame.locals import *  # Import konstanta pygame
 
 ## 📂 Struktur File
 <pre>
-stars_warship/
- ├── main.py                 # File utama game yang memuat semua logika permainan
- ├── core/
- │   ├── config.py           # Konfigurasi umum (layar, FPS, dll)
- │   ├── resources.py        # Path gambar, suara, dan loading-nya
- │   ├── game.py             # Inisialisasi dan loop utama game (kalau kamu pisahkan main loop)
- │   ├── utils.py            # Fungsi bantu, misalnya konversi, atau tools lain
- ├── entities/
- │   ├── player.py           # Class Player
- │   ├── bullet.py           # Class Bullet
- │   ├── explosion.py        # Class Explosion
- │   ├── background_star.py  # Class BackgroundStar
- │   └── enemies/
- │       ├── base_enemy.py   # BaseEnemy
- │       ├── vertical.py     # VerticalEnemy
- │       ├── horizontal.py   # HorizontalEnemy
- │       ├── fast.py         # FastEnemy
- │       └── boss.py         # BossEnemy
- ├── assets/
- │   ├── img/
- │   │   └── ...             # Gambar sprite
- │   ├── sound/
- │   │   └── ...             # File audio
- │   └── font/
- │       └── ...             # File font
- └── README.md
+ 📦stars warship
+ ┣ 📂assets
+ ┃ ┣ 📂font
+ ┃ ┣ 📂img
+ ┃ ┣ 📂reference
+ ┃ ┗ 📂sound
+ ┣ 📂core
+ ┣ 📂entities
+ ┃ ┣ 📂enemies
+ ┣ 📜main.py
+ ┣ 📜README.md
 </pre>
 
 ---
