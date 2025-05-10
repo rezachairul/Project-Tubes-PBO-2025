@@ -73,6 +73,8 @@ class Game:
             elif event.type == KEYDOWN:
                 if event.key == K_p:
                     self.paused = not self.paused
+                elif event.key == K_ESCAPE:
+                    self.confirm_quit_screen()
             elif event.type == MOUSEBUTTONDOWN:
                 self.player.shoot()
 
@@ -116,6 +118,41 @@ class Game:
             GAME_SCREEN.blit(pause_text, (SCREEN_WIDTH // 2 - pause_text.get_width() // 2, SCREEN_HEIGHT // 2))
             pygame.display.update()
             GAME_CLOCK.tick(10)
+
+    
+    # Game Confirm Quit Screen
+    def confirm_quit_screen(self):
+        confirm_font = pygame.font.Font('assets/font/Gameplay.ttf', 32)
+        title = self.start_font.render("Are you sure?", True, (255, 255, 255))
+        restart_text = confirm_font.render("Press R to Restart", True, (255, 255, 255))
+        quit_text = confirm_font.render("Press Q to Quit", True, (255, 255, 255))
+
+        confirming = True
+        while confirming:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_r:
+                        self.__init__()
+                        self.start_screen()
+                        self.game_loop()
+                    elif event.key == K_q:
+                        pygame.quit()
+                        sys.exit()
+
+            GAME_SCREEN.fill((0, 0, 0))
+            self.background_stars.update()
+            self.background_stars.draw(GAME_SCREEN)
+
+            GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
+            GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, SCREEN_HEIGHT // 2))
+            GAME_SCREEN.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+
+            pygame.display.update()
+            GAME_CLOCK.tick(30)
+
 
     # Game Over Screen
     def game_over_screen(self):
