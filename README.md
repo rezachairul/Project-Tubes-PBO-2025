@@ -71,6 +71,7 @@ from pygame.locals import *  # Import konstanta pygame
 ---
 
 ## 📂 Struktur File
+<pre>
 stars_warship/
  ├── main.py                 # File utama game yang memuat semua logika permainan
  ├── core/
@@ -97,7 +98,7 @@ stars_warship/
  │   └── font/
  │       └── ...             # File font
  └── README.md
-
+</pre>
 
 ---
 
