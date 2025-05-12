@@ -23,8 +23,9 @@ class Game:
         self.paused = False
         self.game_over = False
 
-        self.font = pygame.font.Font('assets/font/HUTheGame.ttf', 36)
-        self.start_font = pygame.font.Font('assets/font/Gameplay.ttf', 72)
+        self.big_font = pygame.font.Font('assets/font/Gameplay.ttf', 72)
+        self.medium_font = pygame.font.Font('assets/font/PixelGameFont.ttf', 36)
+        self.small_font = pygame.font.Font('assets/font/HUTheGame.ttf', 18)
 
         self.bullet_player_group = pygame.sprite.Group()
         self.player = Player(self.bullet_player_group)
@@ -55,8 +56,8 @@ class Game:
             self.background_stars.update()
             self.background_stars.draw(GAME_SCREEN)
 
-            title = self.start_font.render("Stars Warship", True, (255, 255, 255))
-            start_text = self.font.render("Press SPACE to start", True, (255, 255, 255))
+            title = self.big_font.render("Stars Warship", True, (255, 255, 255))
+            start_text = self.small_font.render("Press SPACE to start", True, (255, 255, 255))
             GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
             GAME_SCREEN.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2))
 
@@ -115,7 +116,7 @@ class Game:
 
     # Pause Screen
     def pause_screen(self):
-        pause_text = self.font.render("Paused - Press P to resume", True, (255, 255, 255))
+        pause_text = self.small_font.render("Paused - Press P to resume", True, (255, 255, 255))
         while self.paused:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -131,10 +132,9 @@ class Game:
     
     # Game Confirm Quit Screen
     def confirm_quit_screen(self):
-        confirm_font = pygame.font.Font('assets/font/Gameplay.ttf', 32)
-        title = self.start_font.render("Are you sure?", True, (255, 255, 255))
-        restart_text = confirm_font.render("Press R to Restart", True, (255, 255, 255))
-        quit_text = confirm_font.render("Press Q to Quit", True, (255, 255, 255))
+        title = self.big_font.render("Are you sure?", True, (255, 255, 255))
+        restart_text = self.medium_font.render("Press R to Restart", True, (255, 255, 255))
+        quit_text = self.medium_font.render("Press Q to Quit", True, (255, 255, 255))
 
         confirming = True
         while confirming:
@@ -166,8 +166,8 @@ class Game:
     # Game Over Screen
     def game_over_screen(self):
         GAME_OVER_SOUND.play()
-        over_text = self.start_font.render("GAME OVER", True, (255, 0, 0))
-        restart_text = self.font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+        over_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
+        restart_text = self.small_font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
 
         while self.game_over:
             for event in pygame.event.get():
