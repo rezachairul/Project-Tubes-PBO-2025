@@ -6,7 +6,7 @@ import pygame      # Library utama untuk membuat game
 from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
 from core.utils import bullet_player_group
-from core.resources import BULLET_SOUND, EXPLOSION_SOUND, GAME_OVER_SOUND, BULLET_PLAYER_IMAGE
+from core.resources import PLAYER_SHIELD_IMAGE, BULLET_SOUND, EXPLOSION_SOUND, GAME_OVER_SOUND, BULLET_PLAYER_IMAGE
 
 from entities.Bullet import Bullet
 from entities.Explosion import Explosion
@@ -79,7 +79,13 @@ class Player(pygame.sprite.Sprite):
                     self.invulnerable = False
                     self.image.set_alpha(255)
         else:
+            self.image = self.image_original.copy()
             self.image.set_alpha(255)
+
+            #gambar shield kalau aktif
+            if self.shield:
+            shield_scaled = pygame.transform.scale(PLAYER_SHIELD_IMAGE, (60, 60))
+            self.image.blit(shield_scaled, (-5, -5))
 
     def shoot(self):
         # Tambah peluru ke grup sesuai jumlah tembakan aktif
