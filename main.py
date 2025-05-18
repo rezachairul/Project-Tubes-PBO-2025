@@ -1,6 +1,6 @@
 # main.py
 
-from core.game import *
+from core.game import Game
 
 # === MAIN FUNCTION ===
 # Fungsi utama untuk menjalankan game
