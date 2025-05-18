@@ -32,7 +32,7 @@ class VerticalEnemy(BaseEnemy):
     def _fire_bullet(self):
         bullet = Bullet(
             self.rect.centerx, 
-            self.rect.bottom, 
+            self.rect.bottom,
             direction=(0, 5),
             speed=5, 
             damage=10, 
