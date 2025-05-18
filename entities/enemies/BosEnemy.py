@@ -30,6 +30,7 @@ from core.config import (
 class BosEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_BOS_IMAGE, BULLET_ENEMY_BOS_IMAGE, health=10, score_value=1000)
+        self.bullet_image = pygame.transform.scale(self.bullet_image, (8, 8))
         self.angle = 0
         self.vx = random.choice([-2, 2])
         self.vy = 2
