@@ -1,9 +1,10 @@
 # core/game.py
 
 # === IMPORT LIBRARY ===
-import sys         # Untuk keluar dari game, contoh: sys.exit()
-import pygame      # Library utama untuk membuat game
-from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
+import sys                  # Untuk keluar dari game, contoh: sys.exit()
+import pygame               # Library utama untuk membuat game
+import random               # Library untuk membuat acak
+from pygame.locals import * # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
 from core.config import GAME_SCREEN, SCREEN_HEIGHT, SCREEN_WIDTH, GAME_CLOCK, GAME_FPS
 from core.utils import *
@@ -14,7 +15,12 @@ from core.utils import bullet_player_group
 
 from entities.BackgroundStar import *
 from entities.Player import *
-from entities.enemies import *
+from entities.enemies import (
+    VerticalEnemy,
+    HorizontalEnemy,
+    FastEnemy,
+    BosEnemy
+)
 
 class Game:
     def __init__(self):
@@ -42,6 +48,20 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
 
+        # === Enemies ===
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_bullet_group = pygame.sprite.Group()
+        self.all_sprites.add(*self.enemy_group)
+        # Inisialisasi waktu spawn terakhir
+        self.last_spawn_time = pygame.time.get_ticks()
+
+        # === Kontrol Tahapan Musuh Berdasarkan Skor ===
+        self.current_stage = 0             # Tahapan saat ini (0: awal, 1: setelah skor 1000, dst)
+        self.boss_spawned = False          # Bos sudah muncul atau belum
+        self.boss_defeated = False         # Bos sudah dikalahkan atau belum
+        self.boss = None                   # Simpan bos aktif saat ini (kalau ada)
+
+
     # Start Screen
     def start_screen(self):
         while not self.playing:
@@ -68,13 +88,28 @@ class Game:
         self.background_stars.update()
         self.all_sprites.update()
         self.bullet_player_group.update()
+        now = pygame.time.get_ticks()
+        
+        # Kosongkan dulu grup peluru musuh
+        self.enemy_bullet_group.empty()
 
+        # Ambil peluru dari setiap musuh
+        for enemy in self.enemy_group:
+            enemy.bullets.update()
+            self.enemy_bullet_group.add(enemy.bullets)
 
+        now = pygame.time.get_ticks()
+        if now - self.last_spawn_time > 2000:  # setiap 2 detik
+            self.spawn_enemies()
+            self.last_spawn_time = now
+        
     def draw(self):
         GAME_SCREEN.fill((0, 0, 0))
         self.background_stars.draw(GAME_SCREEN)
         self.all_sprites.draw(GAME_SCREEN)
         self.bullet_player_group.draw(GAME_SCREEN)
+        self.enemy_bullet_group.draw(GAME_SCREEN)
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -91,8 +126,75 @@ class Game:
     def check_collision(self):
         pass
 
+    # def spawn_enemies(self):
+    #     if len(self.enemy_group) < 6: # spawn 6 enemies at a time
+    #         enemy_type = random.choice(['vertical', 'horizontal', 'fast', 'bos'])
+    #         x = random.randint(50, SCREEN_WIDTH - 50)
+    #         y = random.randint(50, SCREEN_HEIGHT - 50)
+
+    #         if enemy_type == 'vertical':
+    #             enemy = VerticalEnemy(x, y)
+    #             enemy_vertical_group.add(enemy)
+    #         elif enemy_type == 'horizontal':
+    #             enemy = HorizontalEnemy(x, y)
+    #             enemy_horizontal_group.add(enemy)
+    #         elif enemy_type == 'fast':
+    #             enemy = FastEnemy(x, y)
+    #             enemy_fast_group.add(enemy)
+    #         elif enemy_type == 'bos':
+    #             enemy = BosEnemy(x, y)
+    #             enemy_bos_group.add(enemy)
+        
+    #         # === Tambahkan ke semua grup utama ===
+    #         self.enemy_group.add(enemy)
+    #         self.all_sprites.add(enemy)
+    #         sprite_group.add(enemy)
+
     def spawn_enemies(self):
-        pass
+        # Batasi jumlah musuh aktif (kecuali saat bos aktif)
+        if len(self.enemy_group) >= 6 or self.boss_spawned:
+            return
+
+        # Ambil posisi spawn acak
+        x = random.randint(50, SCREEN_WIDTH - 50)
+        y = random.randint(50, SCREEN_HEIGHT - 50)
+
+        score = self.player.score  # Ambil skor pemain saat ini
+
+        # Tentukan jenis musuh berdasarkan skor
+        if score < 250:
+            enemy_type = 'vertical'
+        elif score < 500:
+            enemy_type = random.choice(['vertical', 'horizontal'])
+        elif score < 1000:
+            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
+        elif score >= 1000 and not self.boss_spawned:
+            # Spawn bos jika belum pernah
+            enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
+            self.boss_spawned = True
+            self.boss = enemy
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
+            return
+        else:
+            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
+
+        # Inisialisasi musuh sesuai jenis
+        if enemy_type == 'vertical':
+            enemy = VerticalEnemy(x, y)
+            enemy_vertical_group.add(enemy)
+        elif enemy_type == 'horizontal':
+            enemy = HorizontalEnemy(x, y)
+            enemy_horizontal_group.add(enemy)
+        elif enemy_type == 'fast':
+            enemy = FastEnemy(x, y)
+            enemy_fast_group.add(enemy)
+
+        # Tambahkan musuh ke grup utama
+        self.enemy_group.add(enemy)
+        self.all_sprites.add(enemy)
+        sprite_group.add(enemy)
+
 
     def shoot_bullets(self):
         pass
