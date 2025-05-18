@@ -2,6 +2,7 @@
 
 from core.game import Game
 
+
 # === MAIN FUNCTION ===
 # Fungsi utama untuk menjalankan game
 if __name__ == '__main__':
