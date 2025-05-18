@@ -72,18 +72,58 @@ from pygame.locals import *  # Import konstanta pygame
 
 ## 📂 Struktur File
 <pre>
- 📦stars warship
+📦stars warship
+ ┣ 📂.git
  ┣ 📂assets
  ┃ ┣ 📂font
+ ┃ ┃ ┣ 📜Gameplay.ttf
+ ┃ ┃ ┣ 📜HUTheGame.ttf
+ ┃ ┃ ┗ 📜PixelGameFont.ttf
  ┃ ┣ 📂img
+ ┃ ┃ ┣ 📜bullet_enemy.png
+ ┃ ┃ ┣ 📜bullet_enemy_bos.png
+ ┃ ┃ ┣ 📜bullet_player.png
+ ┃ ┃ ┣ 📜enemy_bos.png
+ ┃ ┃ ┣ 📜enemy_fast.png
+ ┃ ┃ ┣ 📜enemy_horizontal.png
+ ┃ ┃ ┣ 📜enemy_vertical.png
+ ┃ ┃ ┣ 📜exp1.png
+ ┃ ┃ ┣ 📜exp2.png
+ ┃ ┃ ┣ 📜exp3.png
+ ┃ ┃ ┣ 📜exp4.png
+ ┃ ┃ ┣ 📜exp5.png
+ ┃ ┃ ┗ 📜playership.png
  ┃ ┣ 📂reference
  ┃ ┗ 📂sound
+ ┃ ┃ ┣ 📜audio_explosion.wav
+ ┃ ┃ ┣ 📜audio_laser.wav
+ ┃ ┃ ┣ 📜Game Over Theme.mp3
+ ┃ ┃ ┣ 📜music-alien.mp3
+ ┃ ┃ ┗ 📜music.wav
  ┣ 📂core
+ ┃ ┣ 📂__pycache__
+ ┃ ┣ 📜config.py
+ ┃ ┣ 📜game.py
+ ┃ ┣ 📜resources.py
+ ┃ ┗ 📜utils.py
  ┣ 📂entities
  ┃ ┣ 📂enemies
+ ┃ ┃ ┣ 📂__pycache__
+ ┃ ┃ ┣ 📜BaseEnemy.py
+ ┃ ┃ ┣ 📜BosEnemy.py
+ ┃ ┃ ┣ 📜FastEnemy.py
+ ┃ ┃ ┣ 📜HorizontalEnemy.py
+ ┃ ┃ ┗ 📜VerticalEnemy.py
+ ┃ ┣ 📂__pycache__
+ ┃ ┣ 📜BackgroundStar.py
+ ┃ ┣ 📜Bullet.py
+ ┃ ┣ 📜Explosion.py
+ ┃ ┗ 📜Player.py
+ ┣ 📜folder.txt
  ┣ 📜main.py
+ ┣ 📜main_.py
  ┣ 📜README.md
-</pre>
+ ┗ 📜uml_game.puml
 
 ---
 

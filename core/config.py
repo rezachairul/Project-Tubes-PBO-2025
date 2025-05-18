@@ -2,7 +2,7 @@
 
 # === IMPORT LIBRARY ===
 import pygame      # Library utama untuk membuat game
-from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
+from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN
 
 # === INISIALISASI GAME PYGAME ===
 pygame.init()  # Wajib dipanggil sebelum menggunakan modul Pygame

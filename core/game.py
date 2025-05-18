@@ -1,9 +1,10 @@
 # core/game.py
 
 # === IMPORT LIBRARY ===
-import sys         # Untuk keluar dari game, contoh: sys.exit()
-import pygame      # Library utama untuk membuat game
-from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
+import sys                  # Untuk keluar dari game, contoh: sys.exit()
+import pygame               # Library utama untuk membuat game
+import random               # Library untuk membuat acak
+from pygame.locals import * # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
 from core.config import GAME_SCREEN, SCREEN_HEIGHT, SCREEN_WIDTH, GAME_CLOCK, GAME_FPS
 from core.utils import *
@@ -14,7 +15,12 @@ from core.utils import bullet_player_group
 
 from entities.BackgroundStar import *
 from entities.Player import *
-from entities.enemies import *
+from entities.enemies import (
+    VerticalEnemy,
+    HorizontalEnemy,
+    FastEnemy,
+    BosEnemy
+)
 
 class Game:
     def __init__(self):
@@ -42,6 +48,13 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
 
+        # === Enemies ===
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_bullet_group = pygame.sprite.Group()
+        self.all_sprites.add(*self.enemy_group)
+        # Inisialisasi waktu spawn terakhir
+        self.last_spawn_time = pygame.time.get_ticks()
+
     # Start Screen
     def start_screen(self):
         while not self.playing:
@@ -68,13 +81,27 @@ class Game:
         self.background_stars.update()
         self.all_sprites.update()
         self.bullet_player_group.update()
+        now = pygame.time.get_ticks()
+        
+        # Kosongkan dulu grup peluru musuh
+        self.enemy_bullet_group.empty()
 
+        # Ambil peluru dari setiap musuh
+        for enemy in self.enemy_group:
+            enemy.bullets.update()
+            self.enemy_bullet_group.add(enemy.bullets)
 
+        now = pygame.time.get_ticks()
+        if now - self.last_spawn_time > 2000:  # setiap 2 detik
+            self.spawn_enemies()
+            self.last_spawn_time = now
+        
     def draw(self):
         GAME_SCREEN.fill((0, 0, 0))
         self.background_stars.draw(GAME_SCREEN)
         self.all_sprites.draw(GAME_SCREEN)
         self.bullet_player_group.draw(GAME_SCREEN)
+
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -92,7 +119,28 @@ class Game:
         pass
 
     def spawn_enemies(self):
-        pass
+        if len(self.enemy_group) < 6: # spawn 6 enemies at a time
+            enemy_type = random.choice(['vertical', 'horizontal', 'fast', 'bos'])
+            x = random.randint(50, SCREEN_WIDTH - 50)
+            y = random.randint(50, SCREEN_HEIGHT - 50)
+
+            if enemy_type == 'vertical':
+                enemy = VerticalEnemy(x, y)
+                enemy_vertical_group.add(enemy)
+            elif enemy_type == 'horizontal':
+                enemy = HorizontalEnemy(x, y)
+                enemy_horizontal_group.add(enemy)
+            elif enemy_type == 'fast':
+                enemy = FastEnemy(x, y)
+                enemy_fast_group.add(enemy)
+            elif enemy_type == 'bos':
+                enemy = BosEnemy(x, y)
+                enemy_bos_group.add(enemy)
+        
+            # === Tambahkan ke semua grup utama ===
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
+            sprite_group.add(enemy)
 
     def shoot_bullets(self):
         pass
@@ -111,6 +159,8 @@ class Game:
 
             self.update()
             self.draw()
+            self.spawn_enemies()
+            self.last_spawn_time = pygame.time.get_ticks() # 
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
 
