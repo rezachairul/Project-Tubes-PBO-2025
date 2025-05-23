@@ -114,6 +114,12 @@ class Game:
         self.enemy_bullet_group.draw(GAME_SCREEN)
         self.explosion_group.draw(GAME_SCREEN)
 
+         # Tampilan skor dan nyawa pakai font medium
+        score_text = self.medium_font.render(f"Score: {self.player.score}", True, (255, 255, 255))
+        lives_text = self.medium_font.render(f"Lives: {self.player.lives}", True, (255, 255, 255))
+        GAME_SCREEN.blit(score_text, (10, 10))
+        GAME_SCREEN.blit(lives_text, (10, 50))
+
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -142,7 +148,7 @@ class Game:
 
     def spawn_enemies(self):
         # Batasi jumlah musuh aktif (kecuali saat bos aktif)
-        if len(self.enemy_group) >= 6 or self.boss_spawned:
+        if len(self.enemy_group) >= 2 or self.boss_spawned:
             return
 
         # Ambil posisi spawn acak
