@@ -52,7 +52,6 @@ class Game:
         # === Enemies ===
         self.enemy_group = pygame.sprite.Group()
         self.enemy_bullet_group = pygame.sprite.Group()
-        self.explosion_group = pygame.sprite.Group()
         self.all_sprites.add(*self.enemy_group)
         # Inisialisasi waktu spawn terakhir
         self.last_spawn_time = pygame.time.get_ticks()
@@ -138,7 +137,14 @@ class Game:
             hits = pygame.sprite.spritecollide(bullet, self.enemy_group, False)
             for enemy in hits:
                 enemy.take_damage(bullet.damage)
-                bullet.kill()
+                # bullet.kill()
+                if enemy.health <= 0:
+                    explosion = Explosion(enemy.rect.centerx, enemy.rect.centery) 
+                    self.explosion_group.add(explosion)
+
+                bullet.hit()
+            
+
         
         # Cek peluru musuh vs player
         hits = pygame.sprite.spritecollide(self.player, self.enemy_bullet_group, False)
