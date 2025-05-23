@@ -56,7 +56,8 @@ class BosEnemy(BaseEnemy):
                 speed=dy,
                 damage=20,
                 image=self.bullet_image,
-                is_player=False
+                is_player=False,
+                scale=(15, 25)
             )
             self.bullets.add(bullet)
         self.angle = (self.angle + 10) % 360  # agar spiral berputar

@@ -44,7 +44,8 @@ class HorizontalEnemy(BaseEnemy):
             speed=0,
             damage=10,
             image=self.bullet_image,
-            is_player=False
+            is_player=False,
+            scale=(15, 25)
         )
         self.bullets.add(bullet)
         BULLET_SOUND.play()

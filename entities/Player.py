@@ -5,7 +5,7 @@ import random      # Untuk angka atau pemilihan acak, misal spawn musuh/peluru
 import pygame      # Library utama untuk membuat game
 from pygame.locals import *  # Import konstanta pygame seperti QUIT, KEYDOWN, dll
 
-from core.utils import bullet_player_group
+from core.utils import bullet_player_group, explosion_group
 from core.resources import BULLET_SOUND, EXPLOSION_SOUND, GAME_OVER_SOUND, BULLET_PLAYER_IMAGE
 
 from entities.Bullet import Bullet
@@ -21,12 +21,14 @@ from entities.Explosion import Explosion
     - Buff: Shield (Perlindungan tambahan jika bisa kalahin 1 fast enemy) + Add Shoot (bisa nambah 1 tembakan (maks 3) jika bisa kalahin 1 bos)
 """
 class Player(pygame.sprite.Sprite):
-    def __init__(self, bullet_group):
+    def __init__(self, bullet_group, explosion_group):
         super().__init__()
         self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
         self.image = self.image_original.copy()
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=(400, 500))
+        self.explosion_group = explosion_group
+        self.dead_animating = False
 
         self.lives = 5
         self.score = 0
@@ -51,6 +53,13 @@ class Player(pygame.sprite.Sprite):
         self.blink_interval = 200  # ms
 
     def update(self):
+        if self.dead_animating:
+            # Tunggu sampai animasi ledakan selesai (tidak ada explosion)
+            if len(self.explosion_group) == 0:
+                self.dead_animating = False
+                self.respawn()
+            return  # skip update lain saat dead animasi
+        
         # Ikuti mouse
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.rect.centerx = mouse_x
@@ -97,6 +106,9 @@ class Player(pygame.sprite.Sprite):
             self.bullet_group.add(bullet)
         BULLET_SOUND.play()
 
+    def take_damage(self, damage=1):
+        self.hit()
+
     def hit(self):
         if self.invulnerable:
             return
@@ -113,7 +125,11 @@ class Player(pygame.sprite.Sprite):
 
     def dead(self):
         GAME_OVER_SOUND.play()
-        self.kill()
+        self.dead_animating = True
+        # Tambah animasi ledakan di posisi player
+        explosion = Explosion(self.rect.centerx, self.rect.centery)
+        self.explosion_group.add(explosion)
+        self.image.set_alpha(0)  # sembunyikan player saat ledakan
 
     def respawn(self):
         self.rect.center = (400, 500)
