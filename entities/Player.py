@@ -91,6 +91,9 @@ class Player(pygame.sprite.Sprite):
             self.image.set_alpha(255)
 
     def shoot(self):
+        if self.lives <= 0 or self.dead_animating:
+            return  # Tidak bisa menembak saat mati atau sedang animasi mati
+        
         # Tambah peluru ke grup sesuai jumlah tembakan aktif
         for i in range(self.current_shoot):
             # bullet = Bullet(self.rect.centerx + (i - self.current_shoot // 2) * 10, self.rect.top)
