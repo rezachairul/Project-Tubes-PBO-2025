@@ -221,7 +221,8 @@ class Game:
 
     # Pause Screen
     def pause_screen(self):
-        pause_text = self.small_font.render("Paused - Press P to resume", True, (255, 255, 255))
+        pause_text = self.big_font.render("Paused", True, (255, 255, 255))
+        pause_text = self.big_font.render("Press P to resume", True, (255, 255, 255))
         while self.paused:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -237,7 +238,7 @@ class Game:
     
     # Game Confirm Quit Screen
     def confirm_quit_screen(self):
-        title = self.big_font.render("Are you sure?", True, (255, 255, 255))
+        title = self.big_font.render("Are you sure Quit?", True, (255, 255, 255))
         restart_text = self.medium_font.render("Press R to Restart", True, (255, 255, 255))
         quit_text = self.medium_font.render("Press Q to Quit", True, (255, 255, 255))
 
