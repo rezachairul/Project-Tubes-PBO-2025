@@ -273,7 +273,10 @@ class Game:
     def game_over_screen(self):
         GAME_OVER_SOUND.play()
         over_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
-        restart_text = self.small_font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+        restart_text = self.medium_font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+
+        # Tambahkan skor terakhir
+        final_score_text = self.medium_font.render(f"Your Score: {self.player.score}", True, (255, 255, 255))
 
         while self.game_over:
             for event in pygame.event.get():
