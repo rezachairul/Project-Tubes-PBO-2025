@@ -35,7 +35,7 @@ class Game:
 
         self.bullet_player_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group() 
-        self.player = Player(self.bullet_player_group, self.explosion_group)
+        self.player = Player(self.bullet_player_group, self.explosion_group, self)
 
 
         # === Background Star ===
@@ -147,10 +147,11 @@ class Game:
 
         
         # Cek peluru musuh vs player
-        hits = pygame.sprite.spritecollide(self.player, self.enemy_bullet_group, False)
-        for bullet in hits:
-            self.player.take_damage(bullet.damage)
-            bullet.kill()
+        if self.player.lives > 0: 
+            hits = pygame.sprite.spritecollide(self.player, self.enemy_bullet_group, False)
+            for bullet in hits:
+                self.player.take_damage(bullet.damage)
+                bullet.kill()
 
     def spawn_enemies(self):
         # Batasi jumlah musuh aktif (kecuali saat bos aktif)

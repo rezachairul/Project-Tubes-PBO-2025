@@ -21,7 +21,7 @@ from entities.Explosion import Explosion
     - Buff: Shield (Perlindungan tambahan jika bisa kalahin 1 fast enemy) + Add Shoot (bisa nambah 1 tembakan (maks 3) jika bisa kalahin 1 bos)
 """
 class Player(pygame.sprite.Sprite):
-    def __init__(self, bullet_group, explosion_group):
+    def __init__(self, bullet_group, explosion_group, game):
         super().__init__()
         self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
         self.image = self.image_original.copy()
@@ -29,6 +29,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(400, 500))
         self.explosion_group = explosion_group
         self.dead_animating = False
+
+        self.game = game
 
         self.lives = 5
         self.score = 0
@@ -121,18 +123,17 @@ class Player(pygame.sprite.Sprite):
         else:
             self.lives -= 1
             EXPLOSION_SOUND.play()
-            if self.lives <= 0:
-                self.dead()
-            else:
-                self.respawn()
+            self.dead()
 
     def dead(self):
-        GAME_OVER_SOUND.play()
+        if self.lives <= 0:
+            self.game.game_over = True 
         self.dead_animating = True
         # Tambah animasi ledakan di posisi player
         explosion = Explosion(self.rect.centerx, self.rect.centery)
         self.explosion_group.add(explosion)
         self.image.set_alpha(0)  # sembunyikan player saat ledakan
+        GAME_OVER_SOUND.play()
 
     def respawn(self):
         self.rect.center = (400, 500)
