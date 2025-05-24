@@ -46,7 +46,7 @@ class BosEnemy(BaseEnemy):
 
     # Tembakan
     def _fire_bullet(self):
-        speed = 4
+        speed = 0.5
         for i in range(8):
             angle_rad = math.radians(self.angle + i * 45)
             dx = math.cos(angle_rad) * 4

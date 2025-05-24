@@ -164,6 +164,14 @@ class Game:
             self.spawn_enemies()
             self.last_spawn_time = now
         
+        if self.boss_spawned and not self.boss.alive():
+            self.boss_spawned = False
+            self.player.score = 0  # atau sesuaikan logika jika tidak ingin reset score
+            # Opsional: reset grup musuh
+            for group in [enemy_vertical_group, enemy_horizontal_group, enemy_fast_group]:
+                group.empty()
+
+        
     def draw(self):
         GAME_SCREEN.fill((0, 0, 0))
         self.background_stars.draw(GAME_SCREEN)
@@ -211,50 +219,104 @@ class Game:
                 self.player.take_damage(bullet.damage)
                 bullet.kill()
 
+    # Batas jumlah musuh per jenis
+    MAX_VERTICAL_ENEMIES = 5
+    MAX_HORIZONTAL_ENEMIES = 3
+    MAX_FAST_ENEMIES = 2
+
     def spawn_enemies(self):
-        # Batasi jumlah musuh aktif (kecuali saat bos aktif)
-        if len(self.enemy_group) >= 2 or self.boss_spawned:
-            return
+        score = self.player.score
 
-        # Ambil posisi spawn acak
-        x = random.randint(50, SCREEN_WIDTH - 50)
-        y = random.randint(50, SCREEN_HEIGHT - 50)
-
-        score = self.player.score  # Ambil skor pemain saat ini
-
-        # Tentukan jenis musuh berdasarkan skor
-        if score < 10:
-            enemy_type = 'vertical'
-        elif score < 20:
-            enemy_type = random.choice(['vertical', 'horizontal'])
-        elif score < 30:
-            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
-        elif score >= 200 and not self.boss_spawned:
-            # Spawn bos jika belum pernah
+        # Cek apakah bos harus muncul
+        if score >= 150 and not self.boss_spawned:
             enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
             self.boss_spawned = True
             self.boss = enemy
             self.enemy_group.add(enemy)
             self.all_sprites.add(enemy)
             return
+
+        # Tentukan jenis musuh yang akan muncul berdasarkan skor
+        if score < 10:
+            possible_types = ['vertical']
+        elif score < 20:
+            possible_types = ['vertical', 'horizontal']
+        elif score < 30:
+            possible_types = ['vertical', 'horizontal', 'fast']
         else:
-            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
+            possible_types = ['vertical', 'horizontal', 'fast']
 
-        # Inisialisasi musuh sesuai jenis
-        if enemy_type == 'vertical':
-            enemy = VerticalEnemy(x, y)
-            enemy_vertical_group.add(enemy)
-        elif enemy_type == 'horizontal':
-            enemy = HorizontalEnemy(x, y)
-            enemy_horizontal_group.add(enemy)
-        elif enemy_type == 'fast':
-            enemy = FastEnemy(x, y)
-            enemy_fast_group.add(enemy)
+        random.shuffle(possible_types)
 
-        # Tambahkan musuh ke grup utama
+        for enemy_type in possible_types:
+            if enemy_type == 'vertical' and len(enemy_vertical_group) < self.MAX_VERTICAL_ENEMIES:
+                enemy = VerticalEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
+                enemy_vertical_group.add(enemy)
+                break
+            elif enemy_type == 'horizontal' and len(enemy_horizontal_group) < self.MAX_HORIZONTAL_ENEMIES:
+                enemy = HorizontalEnemy(0, random.randint(50, SCREEN_HEIGHT - 50))
+                enemy_horizontal_group.add(enemy)
+                break
+            elif enemy_type == 'fast' and len(enemy_fast_group) < self.MAX_FAST_ENEMIES:
+                enemy = FastEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
+                enemy_fast_group.add(enemy)
+                break
+        else:
+            return  # Tidak ada musuh yang bisa ditambahkan (semua penuh)
+
         self.enemy_group.add(enemy)
         self.all_sprites.add(enemy)
         sprite_group.add(enemy)
+
+
+    # # Spwan Enemies
+    # MAX_VERTICAL_ENEMIES = 5
+    # MAX_HORIZONTAL_ENEMIES = 3
+    # MAX_FAST_ENEMIES = 2
+    # def spawn_enemies(self):
+    #     # Batasi jumlah musuh aktif (kecuali saat bos aktif)
+    #     if len(self.enemy_group) >= 10 or self.boss_spawned:
+    #         return
+
+    #     # Ambil posisi spawn acak
+    #     x = random.randint(50, SCREEN_WIDTH - 50)
+    #     y = random.randint(50, SCREEN_HEIGHT - 50)
+
+    #     score = self.player.score  # Ambil skor pemain saat ini
+
+    #     # Tentukan jenis musuh berdasarkan skor
+    #     if score < 10:
+    #         enemy_type = 'vertical'
+    #     elif score < 20:
+    #         enemy_type = random.choice(['vertical', 'horizontal'])
+    #     elif score < 30:
+    #         enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
+    #     elif score >= 200 and not self.boss_spawned:
+    #         # Spawn bos jika belum pernah
+    #         enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
+    #         self.boss_spawned = True
+    #         self.boss = enemy
+    #         self.enemy_group.add(enemy)
+    #         self.all_sprites.add(enemy)
+    #         return
+    #     else:
+    #         enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
+
+    #     # Inisialisasi musuh sesuai jenis
+    #     if enemy_type == 'vertical':
+    #         enemy = VerticalEnemy(x, y)
+    #         enemy_vertical_group.add(enemy)
+    #     elif enemy_type == 'horizontal':
+    #         enemy = HorizontalEnemy(x, y)
+    #         enemy_horizontal_group.add(enemy)
+    #     elif enemy_type == 'fast':
+    #         enemy = FastEnemy(x, y)
+    #         enemy_fast_group.add(enemy)
+
+    #     # Tambahkan musuh ke grup utama
+    #     self.enemy_group.add(enemy)
+    #     self.all_sprites.add(enemy)
+    #     sprite_group.add(enemy)
 
 
     def shoot_bullets(self):
