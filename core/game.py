@@ -31,7 +31,7 @@ class Game:
 
         self.big_font = pygame.font.Font('assets/font/Gameplay.ttf', 72)
         self.medium_font = pygame.font.Font('assets/font/PixelGameFont.ttf', 36)
-        self.small_font = pygame.font.Font('assets/font/HUTheGame.ttf', 18)
+        self.small_font = pygame.font.Font('assets/font/HUTheGame.ttf', 26)
 
         self.bullet_player_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group() 
@@ -62,28 +62,87 @@ class Game:
         self.boss_defeated = False         # Bos sudah dikalahkan atau belum
         self.boss = None                   # Simpan bos aktif saat ini (kalau ada)
 
-
-    # Start Screen
+    # Start Screen 
     def start_screen(self):
+        def draw_text_with_shadow(font, text, x, y, main_color, shadow_color=(0, 0, 0), offset=2):
+            shadow = font.render(text, True, shadow_color)
+            surface = font.render(text, True, main_color)
+            GAME_SCREEN.blit(shadow, (x + offset, y + offset))
+            GAME_SCREEN.blit(surface, (x, y))
+
+        show_paused_demo = False
+        show_move_demo = False
+        last_mouse_pos = pygame.mouse.get_pos()
+
         while not self.playing:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == KEYDOWN and event.key == K_SPACE:
-                    self.playing = True
+                elif event.type == KEYDOWN:
+                    if event.key == K_SPACE:
+                        self.playing = True
+                    elif event.key == K_p:
+                        show_paused_demo = not show_paused_demo
+                    elif event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+
 
             GAME_SCREEN.fill((0, 0, 0))
             self.background_stars.update()
             self.background_stars.draw(GAME_SCREEN)
 
-            title = self.big_font.render("Stars Warship", True, (255, 255, 255))
-            start_text = self.small_font.render("Press SPACE to start", True, (255, 255, 255))
-            GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
-            GAME_SCREEN.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2))
+            # Judul
+            title_text = "Stars Warship"
+            title = self.big_font.render(title_text, True, (255, 255, 255))
+            draw_text_with_shadow(self.big_font, title_text,
+                                SCREEN_WIDTH // 2 - title.get_width() // 2,
+                                SCREEN_HEIGHT // 4,
+                                (255, 255, 255))
+
+            # Teks berkedip
+            if pygame.time.get_ticks() // 500 % 2 == 0:
+                blink_text = "Press SPACE to start"
+                blink = self.medium_font.render(blink_text, True, (255, 255, 0))
+                GAME_SCREEN.blit(blink, (SCREEN_WIDTH // 2 - blink.get_width() // 2, SCREEN_HEIGHT // 2))
+
+            # Instruksi
+            instructions = [
+                ("Use Mouse", " to move the player"),
+                ("Press ", "ESC", " to pause the game"),
+                ("Press ", "P", " to resume when paused")
+            ]
+            
+            base_y = SCREEN_HEIGHT // 2 + 60
+            line_spacing = 35
+
+            for i, instr in enumerate(instructions):
+                if len(instr) == 2:
+                    text = self.small_font.render(instr[0] + instr[1], True, (255, 255, 255))
+                    GAME_SCREEN.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, base_y + i * line_spacing))
+                else:
+                    pre, key, post = instr
+                    pre_text = self.small_font.render(pre, True, (255, 255, 255))
+                    key_text = self.small_font.render(key, True, (255, 255, 215))
+                    post_text = self.small_font.render(post, True, (255, 255, 255))
+                    
+                    total_width = pre_text.get_width() + key_text.get_width() + post_text.get_width()
+                    x = SCREEN_WIDTH // 2 - total_width // 2
+                    y = base_y + i * line_spacing
+                    
+                    GAME_SCREEN.blit(pre_text, (x, y))
+                    GAME_SCREEN.blit(key_text, (x + pre_text.get_width(), y))
+                    GAME_SCREEN.blit(post_text, (x + pre_text.get_width() + key_text.get_width(), y))
+
+            if show_paused_demo:
+                pause_demo = self.small_font.render("Game Paused... Press P to resume", True, (255, 255, 100))
+                GAME_SCREEN.blit(pause_demo, (SCREEN_WIDTH // 2 - pause_demo.get_width() // 2, base_y + line_spacing * 4))
 
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
+
+
 
     def update(self):
         self.background_stars.update()
