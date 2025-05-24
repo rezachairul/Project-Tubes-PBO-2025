@@ -223,13 +223,13 @@ class Game:
         score = self.player.score  # Ambil skor pemain saat ini
 
         # Tentukan jenis musuh berdasarkan skor
-        if score < 250:
+        if score < 50:
             enemy_type = 'vertical'
-        elif score < 500:
+        elif score < 100:
             enemy_type = random.choice(['vertical', 'horizontal'])
-        elif score < 1000:
+        elif score < 150:
             enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
-        elif score >= 1000 and not self.boss_spawned:
+        elif score >= 200 and not self.boss_spawned:
             # Spawn bos jika belum pernah
             enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
             self.boss_spawned = True
