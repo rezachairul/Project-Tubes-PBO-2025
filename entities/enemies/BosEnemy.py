@@ -29,10 +29,11 @@ from core.config import (
 
 class BosEnemy(BaseEnemy):
     def __init__(self, x, y):
-        super().__init__(x, y, ENEMY_BOS_IMAGE, BULLET_ENEMY_BOS_IMAGE, health=10, score_value=1000)
+        super().__init__(x, y, ENEMY_BOS_IMAGE, BULLET_ENEMY_BOS_IMAGE, health=10, score_value=50)
         self.angle = 0
         self.vx = random.choice([-2, 2])
         self.vy = 2
+        self.score_value = 50
 
     # pergerakan bos musuh (segala arah)
     def _move(self):

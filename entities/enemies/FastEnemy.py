@@ -24,6 +24,7 @@ from core.resources import (
 class FastEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_FAST_IMAGE, BULLET_ENEMY_FAST_IMAGE, health=15, score_value=30)
+        self.score_value = 30
 
     # Pergerakan musuh cepat
     def _move(self):

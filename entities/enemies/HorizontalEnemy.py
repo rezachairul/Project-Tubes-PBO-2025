@@ -23,7 +23,8 @@ from core.resources import (
 class HorizontalEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_HORIZONTAL_IMAGE, BULLET_ENEMY_HORIZONTAL_IMAGE, health=10, score_value=20)
-        self.direction = 1  # 1 = kanan, -1 = kiri
+        self.direction = 1 # 1 = kanan, -1 = kiri
+        self.score_value = 20
 
     # Pergerakan musuh horizontal
     def _move(self):
