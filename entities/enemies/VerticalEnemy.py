@@ -26,6 +26,7 @@ from core.config import (
 class VerticalEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_VERTICAL_IMAGE, BULLET_ENEMY_VERTICAL_IMAGE, health=10, score_value=10)
+        self.score_value = 10
 
     # Pergerakan musuh vertikal
     def _move(self):

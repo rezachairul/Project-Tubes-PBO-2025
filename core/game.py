@@ -139,12 +139,11 @@ class Game:
                 enemy.take_damage(bullet.damage)
                 # bullet.kill()
                 if enemy.health <= 0:
-                    explosion = Explosion(enemy.rect.centerx, enemy.rect.centery) 
+                    explosion = Explosion(enemy.rect.centerx, enemy.rect.centery)
+                    self.player.score += enemy.score_value
                     self.explosion_group.add(explosion)
 
-                bullet.hit()
-            
-
+                bullet.hit()          
         
         # Cek peluru musuh vs player
         if self.player.lives > 0: 

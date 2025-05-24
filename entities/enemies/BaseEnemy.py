@@ -56,7 +56,8 @@ class BaseEnemy(pygame.sprite.Sprite):
         BULLET_SOUND.play()
 
     def take_damage(self, damage=1):
-        self.take_hit() 
+         return self.take_hit(damage)
+        # self.take_hit() 
 
     def take_hit(self, damage=1): # Kurangi health musuh. Jika health habis, musuh mati.
         self.health -= damage

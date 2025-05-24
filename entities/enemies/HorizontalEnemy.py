@@ -41,7 +41,7 @@ class HorizontalEnemy(BaseEnemy):
             x=self.rect.centerx,
             y=self.rect.centery,
             direction=(dx, 0),  # Mengirimkan tuple (dx, 0) sebagai direction
-            speed=0,
+            speed=0.5,
             damage=10,
             image=self.bullet_image,
             is_player=False,
