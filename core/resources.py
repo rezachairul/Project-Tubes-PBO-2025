@@ -7,6 +7,7 @@ import pygame      # Library utama untuk membuat game
 # === PATH GAMBAR (Image Resources) ===
 # Player & Enemies
 PLAYER_IMAGE = 'assets/img/playership.png'
+PLAYER_IMAGE_SHIELD = 'assets/img/player_with_shield.png'
 ENEMY_FAST_IMAGE = 'assets/img/enemy_fast.png'
 ENEMY_HORIZONTAL_IMAGE = 'assets/img/enemy_horizontal.png'
 ENEMY_VERTICAL_IMAGE = 'assets/img/enemy_vertical.png'

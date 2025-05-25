@@ -63,9 +63,6 @@ class Game:
         self.enemy_respawn_delay = 3000  # dalam milidetik (3 detik)
         self.last_boss_score = 0
 
-
-
-
     # Start Screen 
     def start_screen(self):
         def draw_text_with_shadow(font, text, x, y, main_color, shadow_color=(0, 0, 0), offset=2):
@@ -244,6 +241,10 @@ class Game:
                     explosion = Explosion(enemy.rect.centerx, enemy.rect.centery)
                     self.player.score += enemy.score_value
                     self.explosion_group.add(explosion)
+
+                    # Cek jenis musuh, jika FastEnemy aktifkan auto invul buff
+                    if isinstance(enemy, FastEnemy):
+                        self.player.activate_auto_invul()
                 bullet.hit()          
         # Cek peluru musuh vs player
         if self.player.lives > 0: 
