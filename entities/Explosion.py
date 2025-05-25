@@ -42,10 +42,6 @@ class Explosion(pygame.sprite.Sprite):
             else:
                 self.kill()  # Hapus ledakan setelah animasi selesai
 
-    # def _countdown(self):
-    #     # Menurunkan timer dan menghapus ledakan setelah waktu habis
-    #     pass
-
     def deactivate(self):
         # Menonaktifkan ledakan setelah selesai (misalnya setelah animasi selesai)
         self.kill()

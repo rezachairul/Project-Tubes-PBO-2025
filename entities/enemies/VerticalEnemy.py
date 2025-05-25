@@ -33,7 +33,6 @@ class VerticalEnemy(BaseEnemy):
         self.rect.y += 2  # gerak vertikal pelan
         if self.rect.top > SCREEN_HEIGHT:
             self.rect.y = -self.rect.height  # reset ke atas layar
-
     
     # Tembakan
     def _fire_bullet(self):

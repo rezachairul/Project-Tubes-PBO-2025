@@ -3,7 +3,6 @@
 # === IMPORT LIBRARY ===
 import pygame      # Library utama untuk membuat game
 
-
 # === PATH GAMBAR (Image Resources) ===
 # Player & Enemies
 PLAYER_IMAGE = 'assets/img/playership.png'

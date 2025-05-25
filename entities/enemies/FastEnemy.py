@@ -13,7 +13,6 @@ from core.resources import (
     BULLET_SOUND
 )
 
-
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
 # class child enemy => (BaseEnemy):
 '''

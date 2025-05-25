@@ -23,12 +23,6 @@ from entities.Explosion import Explosion
 class Player(pygame.sprite.Sprite):
     def __init__(self, bullet_group, explosion_group, game):
         super().__init__()
-        # self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
-        # self.image_shield = pygame.image.load('assets/img/player_with_shield.png').convert_alpha()
-        # self.image = self.image_original.copy()
-        # self.image = pygame.transform.scale(self.image, (50, 50))
-        # self.image_shield = pygame.transform.scale(self.image_shield, (50, 50))
-
         self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
         self.image_original = pygame.transform.scale(self.image_original, (50, 50))
 

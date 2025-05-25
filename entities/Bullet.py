@@ -30,7 +30,6 @@ class Bullet(pygame.sprite.Sprite):
         if scale:
             self.image = pygame.transform.scale(self.image, scale)
 
-
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)  # Posisi awal peluru
         self.direction = direction  # Arah tembakan (misalnya atas, bawah, kiri, kanan)
