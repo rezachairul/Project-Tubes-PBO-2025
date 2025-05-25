@@ -237,7 +237,7 @@ class Game:
         score = self.player.score
 
         # Cek apakah bos harus muncul
-        if score >= 150 and not self.boss_spawned:
+        if score >= 50 and not self.boss_spawned:
             enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
             self.boss_spawned = True
             self.boss = enemy
