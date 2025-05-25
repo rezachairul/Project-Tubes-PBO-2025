@@ -245,7 +245,8 @@ class Game:
                     # Cek jenis musuh, jika FastEnemy aktifkan auto invul buff
                     if isinstance(enemy, FastEnemy):
                         self.player.activate_auto_invul()
-                bullet.hit()          
+                bullet.hit()
+                
         # Cek peluru musuh vs player
         if self.player.lives > 0: 
             hits = pygame.sprite.spritecollide(self.player, self.enemy_bullet_group, False)
