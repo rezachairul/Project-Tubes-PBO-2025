@@ -15,7 +15,7 @@ from core.resources import EXPLOSION_SOUND, BULLET_SOUND
 """
 # === KELAS BULLET (Peluru) ===
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction, speed, damage, image, is_player=False):
+    def __init__(self, x, y, direction, speed, damage, image, is_player=False, scale=None):
         super().__init__()
         # self.image = pygame.image.load(image).convert_alpha()  # Gambar peluru (akan diubah sesuai jenisnya)
         
@@ -26,6 +26,9 @@ class Bullet(pygame.sprite.Sprite):
             self.image = image
         else:
             raise ValueError("image harus berupa path string atau pygame.Surface")
+        
+        if scale:
+            self.image = pygame.transform.scale(self.image, scale)
 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)  # Posisi awal peluru

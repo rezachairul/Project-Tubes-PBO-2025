@@ -12,6 +12,9 @@ from core.resources import (
     BULLET_ENEMY_VERTICAL_IMAGE,
     BULLET_SOUND
 )
+from core.config import (
+    SCREEN_HEIGHT
+)
 
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
 # class child enemy => (BaseEnemy):
@@ -23,21 +26,25 @@ from core.resources import (
 class VerticalEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_VERTICAL_IMAGE, BULLET_ENEMY_VERTICAL_IMAGE, health=10, score_value=10)
+        self.score_value = 10
 
     # Pergerakan musuh vertikal
     def _move(self):
         self.rect.y += 2  # gerak vertikal pelan
+        if self.rect.top > SCREEN_HEIGHT:
+            self.rect.y = -self.rect.height  # reset ke atas layar
     
     # Tembakan
     def _fire_bullet(self):
         bullet = Bullet(
             self.rect.centerx, 
-            self.rect.bottom, 
+            self.rect.bottom,
             direction=(0, 5),
-            speed=5, 
+            speed=0.5,
             damage=10, 
             image=self.bullet_image, 
-            is_player=False
+            is_player=False,
+            scale=(15, 25)
         )
         self.bullets.add(bullet)
         BULLET_SOUND.play()

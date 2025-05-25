@@ -29,10 +29,15 @@ from core.config import (
 
 class BosEnemy(BaseEnemy):
     def __init__(self, x, y):
-        super().__init__(x, y, ENEMY_BOS_IMAGE, BULLET_ENEMY_BOS_IMAGE, health=10, score_value=1000)
+        super().__init__(x, y, ENEMY_BOS_IMAGE, BULLET_ENEMY_BOS_IMAGE, health=10, score_value=50)
         self.angle = 0
         self.vx = random.choice([-2, 2])
         self.vy = 2
+        self.score_value = 50
+
+        # Cooldown timer untuk tembakan spiral
+        self.fire_delay = 5000  # 5000 ms = 5 detik
+        self.last_fire_time = pygame.time.get_ticks()
 
     # pergerakan bos musuh (segala arah)
     def _move(self):
@@ -45,19 +50,31 @@ class BosEnemy(BaseEnemy):
 
     # Tembakan
     def _fire_bullet(self):
-        for i in range(8):
-            angle_rad = math.radians(self.angle + i * 45)
-            dx = math.cos(angle_rad) * 4
-            dy = math.sin(angle_rad) * 4
+        now = pygame.time.get_ticks()
+        if now - self.last_fire_time < self.fire_delay:
+            return  # Belum waktunya nembak
+
+        self.last_fire_time = now  # Reset timer
+        speed = 4
+        bullet_count = 24  # Banyak peluru per spiral
+        angle_gap = 360 / bullet_count
+
+        for i in range(bullet_count):
+            angle_deg = self.angle + i * angle_gap
+            angle_rad = math.radians(angle_deg)
+            dx = math.cos(angle_rad)
+            dy = math.sin(angle_rad)
             bullet = Bullet(
                 x=self.rect.centerx,
                 y=self.rect.centery,
                 direction=(dx, dy),
-                speed=dy,
+                speed=speed,
                 damage=20,
                 image=self.bullet_image,
-                is_player=False
+                is_player=False,
+                scale=(10, 15)
             )
             self.bullets.add(bullet)
-        self.angle = (self.angle + 10) % 360  # agar spiral berputar
+
+        self.angle = (self.angle + 15) % 360  # agar spiral berputar
         BULLET_SOUND.play()

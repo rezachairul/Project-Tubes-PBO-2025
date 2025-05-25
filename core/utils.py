@@ -3,7 +3,6 @@
 # === IMPORT LIBRARY ===
 import pygame      # Library utama untuk membuat game
 
-
 # === SPRITE GROUPS (Kumpulan Objek/Game Entities) ===
 background_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()

@@ -13,7 +13,6 @@ from core.resources import (
     BULLET_SOUND
 )
 
-
 # === KELAS BASE ENEMY (Kelas Dasar Musuh) ===
 # class child enemy => (BaseEnemy):
 '''
@@ -24,6 +23,7 @@ from core.resources import (
 class FastEnemy(BaseEnemy):
     def __init__(self, x, y):
         super().__init__(x, y, ENEMY_FAST_IMAGE, BULLET_ENEMY_FAST_IMAGE, health=15, score_value=30)
+        self.score_value = 30
 
     # Pergerakan musuh cepat
     def _move(self):
@@ -39,7 +39,8 @@ class FastEnemy(BaseEnemy):
             speed=7,
             damage=10,
             image=self.bullet_image,
-            is_player=False
+            is_player=False,
+            scale=(15, 25)
         )
         self.bullets.add(bullet)
         BULLET_SOUND.play()
