@@ -282,9 +282,6 @@ class Game:
             self.enemy_group.add(enemy)
             self.all_sprites.add(enemy)
 
-    def shoot_bullets(self):
-        pass
-
     def game_loop(self):
         while self.running:
             self.handle_events()

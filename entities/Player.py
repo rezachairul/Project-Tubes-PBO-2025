@@ -23,10 +23,22 @@ from entities.Explosion import Explosion
 class Player(pygame.sprite.Sprite):
     def __init__(self, bullet_group, explosion_group, game):
         super().__init__()
+        # self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
+        # self.image_shield = pygame.image.load('assets/img/player_with_shield.png').convert_alpha()
+        # self.image = self.image_original.copy()
+        # self.image = pygame.transform.scale(self.image, (50, 50))
+        # self.image_shield = pygame.transform.scale(self.image_shield, (50, 50))
+
         self.image_original = pygame.image.load('assets/img/playership.png').convert_alpha()
+        self.image_original = pygame.transform.scale(self.image_original, (50, 50))
+
+        self.image_shield = pygame.image.load('assets/img/player_with_shield.png').convert_alpha()
+        self.image_shield = pygame.transform.scale(self.image_shield, (50, 50))
+
         self.image = self.image_original.copy()
-        self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=(400, 500))
+
+        # self.rect = self.image.get_rect(center=(400, 500))
         self.explosion_group = explosion_group
         self.dead_animating = False
 
@@ -62,6 +74,13 @@ class Player(pygame.sprite.Sprite):
                 self.respawn()
             return  # skip update lain saat dead animasi
         
+        # Ganti gambar berdasarkan status shield
+        if self.shield:
+            self.image = self.image_shield
+            print("Shield ON")
+        else:
+            self.image = self.image_original
+
         # Ikuti mouse
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.rect.centerx = mouse_x
