@@ -269,56 +269,6 @@ class Game:
         sprite_group.add(enemy)
 
 
-    # # Spwan Enemies
-    # MAX_VERTICAL_ENEMIES = 5
-    # MAX_HORIZONTAL_ENEMIES = 3
-    # MAX_FAST_ENEMIES = 2
-    # def spawn_enemies(self):
-    #     # Batasi jumlah musuh aktif (kecuali saat bos aktif)
-    #     if len(self.enemy_group) >= 10 or self.boss_spawned:
-    #         return
-
-    #     # Ambil posisi spawn acak
-    #     x = random.randint(50, SCREEN_WIDTH - 50)
-    #     y = random.randint(50, SCREEN_HEIGHT - 50)
-
-    #     score = self.player.score  # Ambil skor pemain saat ini
-
-    #     # Tentukan jenis musuh berdasarkan skor
-    #     if score < 10:
-    #         enemy_type = 'vertical'
-    #     elif score < 20:
-    #         enemy_type = random.choice(['vertical', 'horizontal'])
-    #     elif score < 30:
-    #         enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
-    #     elif score >= 200 and not self.boss_spawned:
-    #         # Spawn bos jika belum pernah
-    #         enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
-    #         self.boss_spawned = True
-    #         self.boss = enemy
-    #         self.enemy_group.add(enemy)
-    #         self.all_sprites.add(enemy)
-    #         return
-    #     else:
-    #         enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
-
-    #     # Inisialisasi musuh sesuai jenis
-    #     if enemy_type == 'vertical':
-    #         enemy = VerticalEnemy(x, y)
-    #         enemy_vertical_group.add(enemy)
-    #     elif enemy_type == 'horizontal':
-    #         enemy = HorizontalEnemy(x, y)
-    #         enemy_horizontal_group.add(enemy)
-    #     elif enemy_type == 'fast':
-    #         enemy = FastEnemy(x, y)
-    #         enemy_fast_group.add(enemy)
-
-    #     # Tambahkan musuh ke grup utama
-    #     self.enemy_group.add(enemy)
-    #     self.all_sprites.add(enemy)
-    #     sprite_group.add(enemy)
-
-
     def shoot_bullets(self):
         pass
 
@@ -342,8 +292,9 @@ class Game:
 
     # Pause Screen
     def pause_screen(self):
-        pause_text = self.big_font.render("Paused", True, (255, 255, 255))
-        pause_text = self.big_font.render("Press P to resume", True, (255, 255, 255))
+        title_text = self.big_font.render("MISSION PAUSED", True, (255, 255, 255))
+        resume_text = self.medium_font.render("Press P to Resume Flight", True, (200, 200, 200))
+
         while self.paused:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -352,16 +303,24 @@ class Game:
                 elif event.type == KEYDOWN and event.key == K_p:
                     self.paused = False
 
-            GAME_SCREEN.blit(pause_text, (SCREEN_WIDTH // 2 - pause_text.get_width() // 2, SCREEN_HEIGHT // 2))
+            GAME_SCREEN.fill((0, 0, 0))
+            self.background_stars.update()
+            self.background_stars.draw(GAME_SCREEN)
+
+            # Menempatkan teks secara terpisah agar tidak menumpuk
+            GAME_SCREEN.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 3))
+            GAME_SCREEN.blit(resume_text, (SCREEN_WIDTH // 2 - resume_text.get_width() // 2, SCREEN_HEIGHT // 2))
+
             pygame.display.update()
             GAME_CLOCK.tick(10)
 
-    
+
     # Game Confirm Quit Screen
     def confirm_quit_screen(self):
-        title = self.big_font.render("Are you sure Quit?", True, (255, 255, 255))
-        restart_text = self.medium_font.render("Press R to Restart", True, (255, 255, 255))
-        quit_text = self.medium_font.render("Press Q to Quit", True, (255, 255, 255))
+        title = self.big_font.render("Abort Mission?", True, (255, 255, 255))
+        restart_text = self.medium_font.render("Press R to Restart Mission", True, (255, 255, 255))
+        quit_text = self.medium_font.render("Press Q to Eject and Exit", True, (255, 255, 255))
+        resume_text = self.medium_font.render("Press P to Resume Flight", True, (255, 255, 255))
 
         confirming = True
         while confirming:
@@ -371,12 +330,15 @@ class Game:
                     sys.exit()
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
-                        self.__init__()
+                        self.__init__()  # Restart game
                         self.start_screen()
                         self.game_loop()
+                        return  # Exit this screen after restart
                     elif event.key == K_q:
                         pygame.quit()
                         sys.exit()
+                    elif event.key == K_p:
+                        confirming = False  # Resume game
 
             GAME_SCREEN.fill((0, 0, 0))
             self.background_stars.update()
@@ -385,16 +347,19 @@ class Game:
             GAME_SCREEN.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, SCREEN_HEIGHT // 3))
             GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, SCREEN_HEIGHT // 2))
             GAME_SCREEN.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+            GAME_SCREEN.blit(resume_text, (SCREEN_WIDTH // 2 - resume_text.get_width() // 2, SCREEN_HEIGHT // 2 + 120))
 
             pygame.display.update()
             GAME_CLOCK.tick(30)
 
 
+
     # Game Over Screen
     def game_over_screen(self):
         GAME_OVER_SOUND.play()
-        over_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
-        restart_text = self.medium_font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+        over_text = self.big_font.render("MISSION FAILED", True, (255, 0, 0))
+        restart_text = self.medium_font.render("Press R to Relaunch Mission", True, (255, 255, 255))
+        quit_text = self.medium_font.render("Press Q to Return to Base", True, (255, 255, 255))
 
         # Tambahkan skor terakhir
         final_score_text = self.medium_font.render(f"Your Score: {self.player.score}", True, (255, 255, 255))
@@ -417,7 +382,14 @@ class Game:
             self.background_stars.update()
             self.background_stars.draw(GAME_SCREEN)
 
-            GAME_SCREEN.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, SCREEN_HEIGHT // 3))
-            GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, SCREEN_HEIGHT // 2))
+             # Hitung posisi awal di tengah layar
+            base_y = SCREEN_HEIGHT // 3
+
+            # Tampilkan teks dengan spasi antar baris
+            GAME_SCREEN.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, base_y))
+            GAME_SCREEN.blit(final_score_text, (SCREEN_WIDTH // 2 - final_score_text.get_width() // 2, base_y + 100))
+            GAME_SCREEN.blit(restart_text, (SCREEN_WIDTH // 2 - restart_text.get_width() // 2, base_y + 150))
+            GAME_SCREEN.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, base_y + 210))
+            
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
