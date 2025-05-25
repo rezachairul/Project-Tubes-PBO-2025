@@ -187,8 +187,8 @@ class Game:
             else:
                 return
 
-        # Jika boss belum spawn dan player score sudah cukup lebih dari last_boss_score + 50
-        if not self.boss_spawned and (self.player.score - self.last_boss_score) >= 50:
+        # Jika boss belum spawn dan player score sudah cukup lebih dari last_boss_score + 150
+        if not self.boss_spawned and (self.player.score - self.last_boss_score) >= 150:
             # Spawn bos
             enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
             self.boss = enemy
@@ -256,40 +256,31 @@ class Game:
     # Batas jumlah musuh per jenis
     MAX_VERTICAL_ENEMIES = 5
     MAX_HORIZONTAL_ENEMIES = 3
-    MAX_FAST_ENEMIES = 2    
+    MAX_FAST_ENEMIES = 2
 
     def spawn_enemies(self):
-        # Berdasarkan fase spawn musuh biasa berurutan
-        if self.enemy_spawn_phase == 0:
+        score = self.player.score
+
+        # Spawn VerticalEnemy jika jumlah belum melebihi maksimum
+        if len(enemy_vertical_group) < self.MAX_VERTICAL_ENEMIES:
             enemy = VerticalEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
             enemy_vertical_group.add(enemy)
-            self.enemy_spawn_phase += 1
-        elif self.enemy_spawn_phase == 1:
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
+
+        # Jika score > 50, spawn HorizontalEnemy
+        if score > 50 and len(enemy_horizontal_group) < self.MAX_HORIZONTAL_ENEMIES:
             enemy = HorizontalEnemy(0, random.randint(50, SCREEN_HEIGHT - 50))
             enemy_horizontal_group.add(enemy)
-            self.enemy_spawn_phase += 1
-        elif self.enemy_spawn_phase == 2:
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
+
+        # Jika score > 100, spawn FastEnemy
+        if score > 100 and len(enemy_fast_group) < self.MAX_FAST_ENEMIES:
             enemy = FastEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
             enemy_fast_group.add(enemy)
-            self.enemy_spawn_phase += 1
-        else:
-            # Fase random jika sudah lewat 3 fase
-            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
-            if enemy_type == 'vertical' and len(enemy_vertical_group) < self.MAX_VERTICAL_ENEMIES:
-                enemy = VerticalEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
-                enemy_vertical_group.add(enemy)
-            elif enemy_type == 'horizontal' and len(enemy_horizontal_group) < self.MAX_HORIZONTAL_ENEMIES:
-                enemy = HorizontalEnemy(0, random.randint(50, SCREEN_HEIGHT - 50))
-                enemy_horizontal_group.add(enemy)
-            elif enemy_type == 'fast' and len(enemy_fast_group) < self.MAX_FAST_ENEMIES:
-                enemy = FastEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
-                enemy_fast_group.add(enemy)
-            else:
-                return  # Tidak ada slot musuh baru
-
-        self.enemy_group.add(enemy)
-        self.all_sprites.add(enemy)
-        sprite_group.add(enemy)
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
 
     def shoot_bullets(self):
         pass
