@@ -71,8 +71,6 @@ class Game:
             GAME_SCREEN.blit(surface, (x, y))
 
         show_paused_demo = False
-        show_move_demo = False
-        last_mouse_pos = pygame.mouse.get_pos()
 
         while not self.playing:
             for event in pygame.event.get():
@@ -88,33 +86,39 @@ class Game:
                         pygame.quit()
                         sys.exit()
 
-
             GAME_SCREEN.fill((0, 0, 0))
             self.background_stars.update()
             self.background_stars.draw(GAME_SCREEN)
 
-            # Judul
-            title_text = "Stars Warship"
-            title = self.big_font.render(title_text, True, (255, 255, 255))
-            draw_text_with_shadow(self.big_font, title_text,
-                                SCREEN_WIDTH // 2 - title.get_width() // 2,
-                                SCREEN_HEIGHT // 4,
+            # Judul utama
+            mission_title = "STAR WARSHIP COMMAND"
+            draw_text_with_shadow(self.big_font, mission_title,
+                                SCREEN_WIDTH // 2 - self.big_font.size(mission_title)[0] // 2,
+                                SCREEN_HEIGHT // 6,
                                 (255, 255, 255))
 
-            # Teks berkedip
+            # Subjudul
+            subtitle = self.medium_font.render("Press SPACE to Launch Mission", True, (255, 255, 0))
             if pygame.time.get_ticks() // 500 % 2 == 0:
-                blink_text = "Press SPACE to start"
-                blink = self.medium_font.render(blink_text, True, (255, 255, 0))
-                GAME_SCREEN.blit(blink, (SCREEN_WIDTH // 2 - blink.get_width() // 2, SCREEN_HEIGHT // 2))
+                GAME_SCREEN.blit(subtitle, (
+                    SCREEN_WIDTH // 2 - subtitle.get_width() // 2,
+                    SCREEN_HEIGHT // 3
+                ))
 
-            # Instruksi
+            # Briefing instructions
+            briefing_title = self.small_font.render("Mission Briefing:", True, (180, 180, 255))
+            GAME_SCREEN.blit(briefing_title, (
+                SCREEN_WIDTH // 2 - briefing_title.get_width() // 2,
+                SCREEN_HEIGHT // 2 - 20
+            ))
+
             instructions = [
-                ("Use Mouse", " to move the player"),
-                ("Press ", "ESC", " to pause the game"),
-                ("Press ", "P", " to resume when paused")
+                ("Navigate using", " your Mouse"),
+                ("Press", " ESC ", "to abort mission"),
+                ("Press", " P ", "to pause/resume"),
             ]
-            
-            base_y = SCREEN_HEIGHT // 2 + 60
+
+            base_y = SCREEN_HEIGHT // 2 + 10
             line_spacing = 35
 
             for i, instr in enumerate(instructions):
@@ -124,23 +128,28 @@ class Game:
                 else:
                     pre, key, post = instr
                     pre_text = self.small_font.render(pre, True, (255, 255, 255))
-                    key_text = self.small_font.render(key, True, (255, 255, 215))
+                    key_text = self.small_font.render(key, True, (255, 255, 200))
                     post_text = self.small_font.render(post, True, (255, 255, 255))
-                    
+
                     total_width = pre_text.get_width() + key_text.get_width() + post_text.get_width()
                     x = SCREEN_WIDTH // 2 - total_width // 2
                     y = base_y + i * line_spacing
-                    
+
                     GAME_SCREEN.blit(pre_text, (x, y))
                     GAME_SCREEN.blit(key_text, (x + pre_text.get_width(), y))
                     GAME_SCREEN.blit(post_text, (x + pre_text.get_width() + key_text.get_width(), y))
 
+            # Demo pause mode jika diaktifkan
             if show_paused_demo:
-                pause_demo = self.small_font.render("Game Paused... Press P to resume", True, (255, 255, 100))
-                GAME_SCREEN.blit(pause_demo, (SCREEN_WIDTH // 2 - pause_demo.get_width() // 2, base_y + line_spacing * 4))
+                pause_demo = self.small_font.render("[DEMO] Game Paused... Press P to resume", True, (255, 255, 100))
+                GAME_SCREEN.blit(pause_demo, (
+                    SCREEN_WIDTH // 2 - pause_demo.get_width() // 2,
+                    base_y + line_spacing * len(instructions)
+                ))
 
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
+
 
 
 
