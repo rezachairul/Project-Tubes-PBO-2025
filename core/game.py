@@ -37,7 +37,6 @@ class Game:
         self.explosion_group = pygame.sprite.Group() 
         self.player = Player(self.bullet_player_group, self.explosion_group, self)
 
-
         # === Background Star ===
         self.background_stars = pygame.sprite.Group()
         for _ in range(100):  # Jumlah bintang latar
@@ -57,10 +56,15 @@ class Game:
         self.last_spawn_time = pygame.time.get_ticks()
 
         # === Kontrol Tahapan Musuh Berdasarkan Skor ===
-        self.current_stage = 0             # Tahapan saat ini (0: awal, 1: setelah skor 1000, dst)
-        self.boss_spawned = False          # Bos sudah muncul atau belum
-        self.boss_defeated = False         # Bos sudah dikalahkan atau belum
-        self.boss = None                   # Simpan bos aktif saat ini (kalau ada)
+        self.boss_spawned = False
+        self.waiting_after_boss = False
+        self.boss_defeated_time = 0
+        self.enemy_spawn_phase = 0
+        self.enemy_respawn_delay = 3000  # dalam milidetik (3 detik)
+        self.last_boss_score = 0
+
+
+
 
     # Start Screen 
     def start_screen(self):
@@ -150,36 +154,58 @@ class Game:
             pygame.display.update()
             GAME_CLOCK.tick(GAME_FPS)
 
-
-
-
     def update(self):
         self.background_stars.update()
         self.all_sprites.update()
         self.bullet_player_group.update()
         self.explosion_group.update()
         now = pygame.time.get_ticks()
-        
-        # Kosongkan dulu grup peluru musuh
-        self.enemy_bullet_group.empty()
 
-        # Ambil peluru dari setiap musuh
+        self.enemy_bullet_group.empty()
         for enemy in self.enemy_group:
             enemy.bullets.update()
             self.enemy_bullet_group.add(enemy.bullets)
 
-        now = pygame.time.get_ticks()
-        if now - self.last_spawn_time > 2000:  # setiap 2 detik
-            self.spawn_enemies()
-            self.last_spawn_time = now
-        
+        # Cek boss mati
         if self.boss_spawned and not self.boss.alive():
             self.boss_spawned = False
-            self.player.score = 0  # atau sesuaikan logika jika tidak ingin reset score
-            # Opsional: reset grup musuh
-            for group in [enemy_vertical_group, enemy_horizontal_group, enemy_fast_group]:
-                group.empty()
+            self.waiting_after_boss = True
+            self.boss_defeated_time = now
 
+            # Kosongkan semua musuh
+            for group in [self.enemy_group, enemy_vertical_group, enemy_horizontal_group, enemy_fast_group]:
+                for enemy in group:
+                    self.all_sprites.remove(enemy)
+                group.empty()
+            self.enemy_group.empty()
+
+            self.enemy_spawn_phase = 0  # Reset fase
+            self.last_boss_score = self.player.score  # Simpan score saat bos dikalahkan
+            return
+
+        if self.waiting_after_boss:
+            # Spawn musuh biasa sampai fase selesai
+            if now - self.boss_defeated_time >= self.enemy_respawn_delay:
+                self.waiting_after_boss = False
+            else:
+                return
+
+        # Jika boss belum spawn dan player score sudah cukup lebih dari last_boss_score + 50
+        if not self.boss_spawned and (self.player.score - self.last_boss_score) >= 50:
+            # Spawn bos
+            enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
+            self.boss = enemy
+            self.boss_spawned = True
+            self.enemy_group.add(enemy)
+            self.all_sprites.add(enemy)
+            return
+
+        # Spawn musuh biasa berdasarkan fase, hanya jika boss tidak aktif dan tidak waiting
+        if not self.boss_spawned and not self.waiting_after_boss:
+            now = pygame.time.get_ticks()
+            if now - self.last_spawn_time > 2000:
+                self.spawn_enemies()
+                self.last_spawn_time = now
         
     def draw(self):
         GAME_SCREEN.fill((0, 0, 0))
@@ -218,9 +244,7 @@ class Game:
                     explosion = Explosion(enemy.rect.centerx, enemy.rect.centery)
                     self.player.score += enemy.score_value
                     self.explosion_group.add(explosion)
-
                 bullet.hit()          
-        
         # Cek peluru musuh vs player
         if self.player.lives > 0: 
             hits = pygame.sprite.spritecollide(self.player, self.enemy_bullet_group, False)
@@ -231,52 +255,40 @@ class Game:
     # Batas jumlah musuh per jenis
     MAX_VERTICAL_ENEMIES = 5
     MAX_HORIZONTAL_ENEMIES = 3
-    MAX_FAST_ENEMIES = 2
+    MAX_FAST_ENEMIES = 2    
 
     def spawn_enemies(self):
-        score = self.player.score
-
-        # Cek apakah bos harus muncul
-        if score >= 50 and not self.boss_spawned:
-            enemy = BosEnemy(SCREEN_WIDTH // 2, 50)
-            self.boss_spawned = True
-            self.boss = enemy
-            self.enemy_group.add(enemy)
-            self.all_sprites.add(enemy)
-            return
-
-        # Tentukan jenis musuh yang akan muncul berdasarkan skor
-        if score < 10:
-            possible_types = ['vertical']
-        elif score < 20:
-            possible_types = ['vertical', 'horizontal']
-        elif score < 30:
-            possible_types = ['vertical', 'horizontal', 'fast']
+        # Berdasarkan fase spawn musuh biasa berurutan
+        if self.enemy_spawn_phase == 0:
+            enemy = VerticalEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
+            enemy_vertical_group.add(enemy)
+            self.enemy_spawn_phase += 1
+        elif self.enemy_spawn_phase == 1:
+            enemy = HorizontalEnemy(0, random.randint(50, SCREEN_HEIGHT - 50))
+            enemy_horizontal_group.add(enemy)
+            self.enemy_spawn_phase += 1
+        elif self.enemy_spawn_phase == 2:
+            enemy = FastEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
+            enemy_fast_group.add(enemy)
+            self.enemy_spawn_phase += 1
         else:
-            possible_types = ['vertical', 'horizontal', 'fast']
-
-        random.shuffle(possible_types)
-
-        for enemy_type in possible_types:
+            # Fase random jika sudah lewat 3 fase
+            enemy_type = random.choice(['vertical', 'horizontal', 'fast'])
             if enemy_type == 'vertical' and len(enemy_vertical_group) < self.MAX_VERTICAL_ENEMIES:
                 enemy = VerticalEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
                 enemy_vertical_group.add(enemy)
-                break
             elif enemy_type == 'horizontal' and len(enemy_horizontal_group) < self.MAX_HORIZONTAL_ENEMIES:
                 enemy = HorizontalEnemy(0, random.randint(50, SCREEN_HEIGHT - 50))
                 enemy_horizontal_group.add(enemy)
-                break
             elif enemy_type == 'fast' and len(enemy_fast_group) < self.MAX_FAST_ENEMIES:
                 enemy = FastEnemy(random.randint(50, SCREEN_WIDTH - 50), 0)
                 enemy_fast_group.add(enemy)
-                break
-        else:
-            return  # Tidak ada musuh yang bisa ditambahkan (semua penuh)
+            else:
+                return  # Tidak ada slot musuh baru
 
         self.enemy_group.add(enemy)
         self.all_sprites.add(enemy)
         sprite_group.add(enemy)
-
 
     def shoot_bullets(self):
         pass
@@ -323,7 +335,6 @@ class Game:
             pygame.display.update()
             GAME_CLOCK.tick(10)
 
-
     # Game Confirm Quit Screen
     def confirm_quit_screen(self):
         title = self.big_font.render("Abort Mission?", True, (255, 255, 255))
@@ -360,8 +371,6 @@ class Game:
 
             pygame.display.update()
             GAME_CLOCK.tick(30)
-
-
 
     # Game Over Screen
     def game_over_screen(self):
