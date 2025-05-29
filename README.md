@@ -145,3 +145,4 @@ from pygame.locals import *  # Import konstanta pygame
 
 ## ✍️ Credits
 Game ini dikembangkan untuk tugas kuliah **Pemrograman Berorientasi Objek (PBO)**.
+Link Youtube Demo Game: https://youtu.be/26ugjIAx2XI

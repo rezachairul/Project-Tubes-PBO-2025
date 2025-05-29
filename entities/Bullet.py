@@ -16,9 +16,7 @@ from core.resources import EXPLOSION_SOUND, BULLET_SOUND
 # === KELAS BULLET (Peluru) ===
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, direction, speed, damage, image, is_player=False, scale=None):
-        super().__init__()
-        # self.image = pygame.image.load(image).convert_alpha()  # Gambar peluru (akan diubah sesuai jenisnya)
-        
+        super().__init__()        
         # Cek apakah image adalah string (path), atau Surface langsung
         if isinstance(image, str):
             self.image = pygame.image.load(image).convert_alpha()
@@ -56,16 +54,16 @@ class Bullet(pygame.sprite.Sprite):
         return self.rect.colliderect(screen_rect)
 
     def check_collision(self, sprite_group):
-        # Mengecek tabrakan dengan objek lain (misalnya musuh)
+        # Mengecek tabrakan dengan objek lain
         return pygame.sprite.spritecollide(self, sprite_group, False)
 
     def hit(self):
-        # Logika saat peluru terkena objek (misalnya musuh)
+        # Logika saat peluru terkena objek
         self.explosion_sound = EXPLOSION_SOUND
         self.explosion_sound.play()
         self.deactivate()
 
     def deactivate(self):
-        # Menonaktifkan peluru (misalnya ketika sudah keluar dari layar atau bertabrakan)
+        # Menonaktifkan peluru
         self.active = False
         self.kill()

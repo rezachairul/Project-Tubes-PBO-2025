@@ -31,11 +31,10 @@ class FastEnemy(BaseEnemy):
     
     # Tembakan
     def _fire_bullet(self):
-        # bullet = Bullet(self.rect.centerx, self.rect.bottom, 0, 7, self.bullet_image)
         bullet = Bullet(
             x=self.rect.centerx,
             y=self.rect.bottom,
-            direction=(0, 1),  # Mengirimkan tuple (0, 1) sebagai direction untuk peluru vertikal
+            direction=(0, 1), 
             speed=7,
             damage=10,
             image=self.bullet_image,

@@ -47,7 +47,7 @@ class BaseEnemy(pygame.sprite.Sprite):
             self._fire_bullet()
             self.last_shoot_time = now
 
-    def _fire_bullet(self): # # Membuat dan menembakkan peluru ke bawah (default behavior)
+    def _fire_bullet(self): # # Membuat dan menembakkan peluru ke bawah
         bullet = Bullet(self.rect.centerx, self.rect.bottom, direction=(0, 5), speed=5, damage=10, image=self.bullet_image, is_player=False)
         self.bullets.add(bullet)
         BULLET_SOUND.play()
