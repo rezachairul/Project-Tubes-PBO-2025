@@ -145,6 +145,6 @@ from pygame.locals import *  # Import konstanta pygame
 
 ## ✍️ Credits
 Game ini dikembangkan untuk tugas kuliah **Pemrograman Berorientasi Objek (PBO)**.
-Link Youtube Demo Game: [Star Warship](https://youtu.be/26ugjIAx2XI)
-Link Laporan Akhir: [Laporan Akhir](https://www.overleaf.com/read/ckbfngyzchcn#cc9cba)
+- 🎬 Link Youtube Demo Game: [Star Warship](https://youtu.be/26ugjIAx2XI)  
+- 📄 Link Laporan Akhir: [Laporan Akhir](https://www.overleaf.com/read/ckbfngyzchcn#cc9cba)
 
